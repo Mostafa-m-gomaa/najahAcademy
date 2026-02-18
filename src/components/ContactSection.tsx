@@ -96,7 +96,7 @@ const ContactSection = () => {
             className="space-y-6"
           >
             <a
-              href="tel:+972501234567"
+              href="tel:+972546410674"
               className="glass-card rounded-2xl p-6 flex items-center gap-4 hover:scale-[1.02] transition-transform"
             >
               <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center">
@@ -104,7 +104,7 @@ const ContactSection = () => {
               </div>
               <div>
                 <div className="font-semibold">{t('contact.callUs')}</div>
-                <div className="text-muted-foreground text-sm" dir="ltr">+972-50-123-4567</div>
+                <div className="text-muted-foreground text-sm" dir="ltr">+972-54-641-0674</div>
               </div>
             </a>
 
@@ -129,7 +129,7 @@ const ContactSection = () => {
               </div>
               <div>
                 <div className="font-semibold">{t('contact.address')}</div>
-                <div className="text-muted-foreground text-sm">Israel</div>
+                <div className="text-muted-foreground text-sm">Palestine</div>
               </div>
             </div>
 

@@ -25,17 +25,18 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Hero
     'hero.title': 'أتقن العبرية والإنجليزية',
-    'hero.titleAccent': 'مع أفضل المتخصصين',
-    'hero.subtitle': 'انطلق نحو مستقبل مهني أفضل مع دورات احترافية مصممة خصيصاً لتحقيق أهدافك اللغوية',
+    'hero.titleAccent': 'مع أفضل المعلمات',
+    'hero.subtitle': "تعلّم اليوم من خلال دورات اللغة العبرية والإنجليزية، فردية أو جماعية، في برامج احترافية مصممة خصيصًا لتحقيق أهدافك. ، نوفر أيضًا تحضيرًا لامتحانات ياعيل نت، أمير نت، وامتحانات البجروت.",
     'hero.cta1': 'ابدأ الآن',
     'hero.cta2': 'تصفح الدورات',
-    'hero.trust': 'موثوق من آلاف الطلاب',
-    'hero.students': '+2000 طالب',
+    'hero.trust': 'موثوق من مئات الطلاب',
+    'hero.students': '+823 طالب',
     'hero.rating': '4.9 تقييم',
     'hero.courses_count': '+15 دورة',
 
     // Courses
-    'courses.title': 'دوراتنا التعليمية',
+    'courses.title.solo': 'دوراتنا التعليمية الفردية',
+    'courses.title.group': 'دوراتنا التعليمية الجماعية',
     'courses.subtitle': 'اختر من بين مجموعة متنوعة من الدورات المصممة بعناية لتناسب جميع المستويات',
     'courses.viewAll': 'عرض جميع الدورات',
     'courses.register': 'سجل الآن',
@@ -131,7 +132,8 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.rating': '4.9 דירוג',
     'hero.courses_count': '+15 קורסים',
 
-    'courses.title': 'הקורסים שלנו',
+    'courses.title.solo': 'הקורסים שלנו הפרטיים',
+    'courses.title.group': 'הקורסים שלנו הקבוצתיים',
     'courses.subtitle': 'בחרו מתוך מגוון קורסים שעוצבו בקפידה לכל הרמות',
     'courses.viewAll': 'הצג את כל הקורסים',
     'courses.register': 'הרשמה',

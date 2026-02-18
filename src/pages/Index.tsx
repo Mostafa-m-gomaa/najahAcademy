@@ -14,7 +14,8 @@ const Index = () => {
       <AnimatedBackground />
       <Navbar />
       <Hero />
-      <CoursesSection />
+      <CoursesSection type="solo" />
+      <CoursesSection type="group" />
       <AboutSection />
       <TestimonialsSection />
       <ContactSection />

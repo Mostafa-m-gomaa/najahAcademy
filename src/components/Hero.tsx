@@ -47,10 +47,10 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 flex flex-col items-start gap-4"
             >
               {t('hero.title')}{' '}
-              <span className="gradient-text">{t('hero.titleAccent')}</span>
+              <span className="gradient-text mt-2">{t('hero.titleAccent')}</span>
             </motion.h1>
 
             <motion.p
@@ -134,7 +134,7 @@ const Hero = () => {
               <div className="glass-card rounded-3xl p-8 md:p-12 relative overflow-hidden group">
                 {/* Glowing border effect */}
                 <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{ 
+                  style={{
                     background: 'linear-gradient(135deg, hsl(217 91% 60% / 0.1), transparent, hsl(199 89% 48% / 0.1))',
                   }}
                 />
@@ -149,7 +149,7 @@ const Hero = () => {
                       <BookOpen className="w-7 h-7 text-primary-foreground" />
                     </motion.div>
                     <div>
-                      <div className="font-bold text-lg">najah2000</div>
+                      <div className="font-bold text-lg">najah2200</div>
                       <div className="text-sm text-muted-foreground">Language Academy</div>
                     </div>
                   </div>
@@ -218,7 +218,7 @@ const Hero = () => {
                 className="absolute -bottom-4 -right-4 glass-card rounded-2xl px-4 py-2"
                 style={{ boxShadow: '0 0 30px hsl(199 89% 48% / 0.15)' }}
               >
-                <span className="text-sm font-semibold gradient-text">+2000</span>
+                <span className="text-sm font-semibold gradient-text">+823</span>
               </motion.div>
 
               <motion.div

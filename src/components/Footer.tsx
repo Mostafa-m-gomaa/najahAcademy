@@ -47,6 +47,17 @@ const Footer = () => {
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} najah2000. {t('footer.rights')}
           </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            This website created with Mostafa Gomaa.{' '}
+            <a
+              href="https://mostafa-gomaa.me"
+              target="_blank"
+              rel="noreferrer"
+              className="underline hover:text-foreground transition-colors"
+            >
+              mostafa-gomaa.me
+            </a>
+          </p>
         </div>
       </div>
     </footer>
