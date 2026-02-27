@@ -26,6 +26,7 @@ const CourseDetail = () => {
   const duration = lang === 'ar' ? course.duration : course.durationHe;
   const level = t(`courses.${course.level}`);
   const learningPoints = lang === 'ar' ? course.learningPointsAr : course.learningPointsHe;
+  const image = course.image;
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -42,7 +43,7 @@ const CourseDetail = () => {
           >
             <div className="h-56 md:h-72 rounded-3xl overflow-hidden mb-8" style={{ background: 'var(--gradient-hero)' }}>
               <div className="h-full flex items-center justify-center">
-                <span className="text-6xl font-bold text-primary-foreground/20">{name.charAt(0)}</span>
+                <img src={image} alt={name} className="h-full w-full object-cover" />
               </div>
             </div>
 
@@ -82,6 +83,25 @@ const CourseDetail = () => {
                 </div>
               ))}
             </div>
+          </motion.div>
+
+          {/* Schedule & flexibility */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="glass-card-glow rounded-2xl p-6 md:p-8 mb-8 border border-primary/20"
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
+                <Clock className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <h2 className="text-xl font-bold gradient-text">نظام المواعيد والمرونة:</h2>
+            </div>
+
+            <p className="text-muted-foreground leading-8 text-base md:text-lg">
+              نعتمد في دوراتنا الفردية مبدأ المرونة لتتناسب مع أوقات طلابنا؛ حيث يتم تنسيق مواعيد اللقاءات بالتواصل المباشر بين الطالب والمعلمة المسؤولة. التعليم متاح في كافة أيام الأسبوع باستثناء يوم السبت، مع إمكانية جدولة الحصص في أي وقت ضمن الفترة ما بين الساعة 8:00 صباحاً و 8:00 مساءً.
+            </p>
           </motion.div>
 
           {/* CTA */}

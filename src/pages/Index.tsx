@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import AcademicExpertsSection from '@/components/AcademicExpertsSection';
 import CoursesSection from '@/components/CoursesSection';
 import AboutSection from '@/components/AboutSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
@@ -14,8 +15,11 @@ const Index = () => {
       <AnimatedBackground />
       <Navbar />
       <Hero />
+      <AcademicExpertsSection />
       <CoursesSection type="solo" />
       <CoursesSection type="group" />
+      <CoursesSection type="enSolo" />
+      <CoursesSection type="enGroup" />
       <AboutSection />
       <TestimonialsSection />
       <ContactSection />

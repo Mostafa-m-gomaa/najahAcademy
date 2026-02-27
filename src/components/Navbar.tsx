@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Menu, X, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import najjahImage from '@/assets/najahLogo.png';
 
 const Navbar = () => {
   const { t, lang, setLang } = useLanguage();
@@ -31,10 +32,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">ن</span>
-            </div>
-            <span className="font-bold text-xl gradient-text">najah2000</span>
+            <img src={najjahImage} alt="Najah 2200" className="w-24 rounded-xl" />
           </Link>
 
           {/* Desktop Nav */}

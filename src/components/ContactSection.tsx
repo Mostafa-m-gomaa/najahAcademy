@@ -6,6 +6,8 @@ import { Phone, MessageCircle, MapPin, Send, CheckCircle } from 'lucide-react';
 const ContactSection = () => {
   const { t } = useLanguage();
   const [sent, setSent] = useState(false);
+  const googleMapsLocation = 'https://maps.app.goo.gl/VtdpSssb5GdkQXf39';
+  const embeddedMapSrc = `https://www.google.com/maps?output=embed&q=${encodeURIComponent(googleMapsLocation)}`;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,12 +106,12 @@ const ContactSection = () => {
               </div>
               <div>
                 <div className="font-semibold">{t('contact.callUs')}</div>
-                <div className="text-muted-foreground text-sm" dir="ltr">+972-54-641-0674</div>
+                <div className="text-muted-foreground text-sm" dir="ltr">+972 54-641-0674</div>
               </div>
             </a>
 
             <a
-              href="https://wa.me/972501234567"
+              href="https://wa.me/972546410674"
               target="_blank"
               rel="noopener noreferrer"
               className="glass-card rounded-2xl p-6 flex items-center gap-4 hover:scale-[1.02] transition-transform"
@@ -119,7 +121,7 @@ const ContactSection = () => {
               </div>
               <div>
                 <div className="font-semibold">{t('contact.whatsapp')}</div>
-                <div className="text-muted-foreground text-sm" dir="ltr">+972-50-123-4567</div>
+                <div className="text-muted-foreground text-sm" dir="ltr">+972 54-641-0674</div>
               </div>
             </a>
 
@@ -133,12 +135,24 @@ const ContactSection = () => {
               </div>
             </div>
 
-            {/* Map placeholder */}
-            <div className="glass-card rounded-2xl h-48 overflow-hidden flex items-center justify-center">
-              <div className="text-muted-foreground text-sm flex items-center gap-2">
+            {/* Google Map */}
+            <div className="glass-card rounded-2xl overflow-hidden">
+              <iframe
+                title="Najah Academy location on Google Maps"
+                src={embeddedMapSrc}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-56 border-0"
+              />
+              <a
+                href={googleMapsLocation}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 text-sm text-primary font-medium hover:opacity-80 transition-opacity"
+              >
                 <MapPin className="w-4 h-4" />
-                Google Maps
-              </div>
+                Open in Google Maps
+              </a>
             </div>
           </motion.div>
         </div>
