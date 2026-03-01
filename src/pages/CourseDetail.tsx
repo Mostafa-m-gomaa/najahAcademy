@@ -96,12 +96,71 @@ const CourseDetail = () => {
               <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
                 <Clock className="w-5 h-5 text-primary-foreground" />
               </div>
-              <h2 className="text-xl font-bold gradient-text">نظام المواعيد والمرونة:</h2>
+              <h2 className="text-xl font-bold gradient-text">📅 نظام تنسيق الحصص الفردية</h2>
             </div>
 
-            <p className="text-muted-foreground leading-8 text-base md:text-lg">
-              نعتمد في دوراتنا الفردية مبدأ المرونة لتتناسب مع أوقات طلابنا؛ حيث يتم تنسيق مواعيد اللقاءات بالتواصل المباشر بين الطالب والمعلمة المسؤولة. التعليم متاح في كافة أيام الأسبوع باستثناء يوم السبت، مع إمكانية جدولة الحصص في أي وقت ضمن الفترة ما بين الساعة 8:00 صباحاً و 8:00 مساءً.
-            </p>
+            <div className="space-y-3 text-muted-foreground text-base md:text-lg leading-8">
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">مرونة تامة:</span>{' '}
+                  يتم تحديد مواعيد اللقاءات مسبقاً بالتنسيق المباشر بين الطالب والمعلمة بما يناسب جدولك الشخصي.
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">قنوات التواصل:</span>{' '}
+                  يمكنك التواصل مع المعلمة المسؤولة عبر الهاتف أو الواتساب لترتيب المواعيد.
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">ساعات التنسيق:</span>{' '}
+                  خدمة التنسيق متاحة يومياً من الساعة 8:00 صباحاً حتى 8:00 مساءً.
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">أيام العمل:</span>{' '}
+                  نتشرف بخدمتكم طوال أيام الأسبوع (ما عدا يوم السبت).
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Payment options */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28 }}
+            className="glass-card-glow rounded-2xl p-6 md:p-8 mb-8 border border-primary/20"
+          >
+            <h2 className="text-xl font-bold gradient-text mb-5">خيارات الدفع المتاحة:</h2>
+
+            <div className="space-y-4 text-muted-foreground text-base md:text-lg leading-8">
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">💳 بطاقة الائتمان (כרטיס אשראי):</span>{' '}
+                  إمكانية التقسيط المريح حتى 12 قسطاً (حسب الرغبة).
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">🏦 تحويل بنكي (העברה בנקאית):</span>{' '}
+                  متاح للدفع الكامل (دفعة واحدة).
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                <p>
+                  <span className="font-semibold text-foreground">💵 نقدي (מזומן):</span>{' '}
+                  متاح للدفع الكامل (دفعة واحدة).
+                </p>
+              </div>
+            </div>
           </motion.div>
 
           {/* CTA */}

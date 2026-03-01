@@ -1,6 +1,6 @@
 import { useLanguage } from '@/contexts/LanguageContext';
-import { motion } from 'framer-motion';
-import { Star } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 interface Testimonial {
@@ -109,6 +109,15 @@ const testimonials: Testimonial[] = [
 const TestimonialsSection = () => {
   const { t, lang } = useLanguage();
   const [active, setActive] = useState(0);
+  const activeItem = testimonials[active];
+
+  const nextSlide = () => {
+    setActive((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevSlide = () => {
+    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
   return (
     <section id="testimonials" className="section-padding relative z-10">
@@ -123,39 +132,73 @@ const TestimonialsSection = () => {
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{t('testimonials.subtitle')}</p>
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
-            {testimonials.map((item, i) => (
+        <div className="max-w-3xl mx-auto">
+          <div className="relative">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className={`glass-card-glow rounded-2xl p-6 cursor-pointer transition-all ${active === i ? 'ring-2 ring-primary/30 glow' : ''}`}
-                onClick={() => setActive(i)}
+                key={active}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.35 }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x > 80) prevSlide();
+                  if (info.offset.x < -80) nextSlide();
+                }}
+                className="glass-card-glow rounded-2xl p-6 md:p-8 transition-all ring-2 ring-primary/30 glow min-h-[280px]"
               >
                 <div className="flex items-center gap-1 mb-3">
                   {Array.from({ length: 5 }).map((_, si) => (
                     <Star
                       key={si}
-                      className={`w-4 h-4 ${si < item.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted'}`}
+                      className={`w-4 h-4 ${si < activeItem.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted'}`}
                     />
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  "{lang === 'ar' ? item.textAr : item.textHe}"
+                <p className="text-muted-foreground mb-4 leading-relaxed whitespace-pre-line">
+                  "{lang === 'ar' ? activeItem.textAr : activeItem.textHe}"
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
                     <span className="text-primary-foreground font-bold text-sm">
-                      {(lang === 'ar' ? item.nameAr : item.nameHe).charAt(0)}
+                      {(lang === 'ar' ? activeItem.nameAr : activeItem.nameHe).charAt(0)}
                     </span>
                   </div>
-                  <span className="font-semibold text-sm">{lang === 'ar' ? item.nameAr : item.nameHe}</span>
+                  <span className="font-semibold text-sm">{lang === 'ar' ? activeItem.nameAr : activeItem.nameHe}</span>
                 </div>
               </motion.div>
-            ))}
+            </AnimatePresence>
+
+            <button
+              type="button"
+              onClick={prevSlide}
+              aria-label="Previous testimonial"
+              className="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-6 w-10 h-10 rounded-full glass-card flex items-center justify-center hover:scale-105 transition-transform"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              onClick={nextSlide}
+              aria-label="Next testimonial"
+              className="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-6 w-10 h-10 rounded-full glass-card flex items-center justify-center hover:scale-105 transition-transform"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center justify-center gap-2 mt-6">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  className={`h-2 rounded-full transition-all ${active === i ? 'w-8 bg-primary' : 'w-2 bg-primary/35 hover:bg-primary/60'}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

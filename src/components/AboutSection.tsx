@@ -22,7 +22,7 @@ const AboutSection = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('about.title')}</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{t('about.subtitle')}</p>
+          <p className="text-muted-foreground text-md max-w-2xl mx-auto">{t('about.subtitle')}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 items-start mb-16">

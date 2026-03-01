@@ -5,7 +5,7 @@ const AcademicExpertsSection = () => {
   const highlights = [
     {
       icon: GraduationCap,
-      title: 'معايير أكاديمية عالية',
+      title: 'التأهيل الأكاديمي العالي',
       text: 'اختيار المعلمات يتم وفق مؤهلات أكاديمية دقيقة وخبرة حقيقية في التعليم.',
     },
     {
@@ -41,7 +41,8 @@ const AcademicExpertsSection = () => {
               viewport={{ once: true }}
               className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 gradient-text"
             >
-              تعرّف على طاقم الخبيرات الأكاديميات لدينا
+              نختار لكِ الأفضل، لنصل بكِ إلى القمة
+              طاقم المعلمات الأكاديميات
             </motion.h2>
 
             <motion.p
@@ -51,7 +52,7 @@ const AcademicExpertsSection = () => {
               viewport={{ once: true }}
               className="text-lg md:text-xl font-semibold mb-8 text-foreground/90"
             >
-              هنا يجتمع العلم والخبرة: طاقم المعلمات الأكاديميات
+              هنا يجتمع العلم والخبرة
             </motion.p>
 
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-start">
@@ -65,9 +66,7 @@ const AcademicExpertsSection = () => {
                 <p>
                   خلف كل قصة نجاح لطلابنا، يقف طاقم مهني متكامل من المعلمات ذوات الكفاءة العالية. لقد تم اختيار كل عضوة في فريقنا بعناية فائقة وبناءً على معايير أكاديمية عليا، مع التركيز على امتلاك خلفية مهنية رصينة وسنين طويلة من الخبرة في سلك التعليم.
                 </p>
-                <p>
-                  هذا المزيج الفريد بين الخبرة الممتدة والتحصيل الأكاديمي المتقدم (ألقاب جامعية أولى وثانية) هو ما يجعل طاقمنا الأقدر على فهم احتياجات الطلاب بدقة، وتصميم المسار الأنسب لقيادتهم نحو أهدافهم بثبات واحترافية.
-                </p>
+
               </motion.div>
 
               <div className="grid gap-4">

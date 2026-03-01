@@ -131,7 +131,7 @@ const ContactSection = () => {
               </div>
               <div>
                 <div className="font-semibold">{t('contact.address')}</div>
-                <div className="text-muted-foreground text-sm">Palestine</div>
+                <div className="text-muted-foreground text-sm">נצרת</div>
               </div>
             </div>
 

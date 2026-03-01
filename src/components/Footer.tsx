@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import najjahImage from '@/assets/najahLogo.png';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -10,10 +11,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold">ن</span>
-              </div>
-              <span className="font-bold text-lg gradient-text">najah2000</span>
+              <img src={najjahImage} alt="Najah 2200" className="w-24 rounded-xl" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">{t('footer.description')}</p>
           </div>
@@ -45,7 +43,7 @@ const Footer = () => {
 
         <div className="border-t border-border/50 pt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} najah2000. {t('footer.rights')}
+            © {new Date().getFullYear()} najah2200. {t('footer.rights')}
           </p>
           <p className="mt-2 text-xs text-muted-foreground">
             This website created with Mostafa Gomaa.{' '}
