@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import najjahImage from '@/assets/najahLogo.png';
+import { Instagram, Facebook } from 'lucide-react';
 
 const Footer = () => {
   const { t } = useLanguage();
+  const instagramUrl = 'https://www.instagram.com/';
+  const facebookUrl = 'https://www.facebook.com/';
 
   return (
     <footer className="relative z-10 border-t border-border/50 bg-card/50 backdrop-blur-sm">
@@ -14,6 +17,26 @@ const Footer = () => {
               <img src={najjahImage} alt="Najah 2200" className="w-24 rounded-xl" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">{t('footer.description')}</p>
+            <div className="flex items-center gap-3 mt-4">
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-9 h-9 rounded-lg bg-gradient-to-br from-pink-500 via-fuchsia-500 to-purple-600 flex items-center justify-center text-primary-foreground hover:scale-105 transition-transform"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-9 h-9 rounded-lg bg-[#1877F2] flex items-center justify-center text-primary-foreground hover:scale-105 transition-transform"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
           <div>

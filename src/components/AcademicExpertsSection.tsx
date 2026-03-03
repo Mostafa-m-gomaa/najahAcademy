@@ -41,7 +41,6 @@ const AcademicExpertsSection = () => {
               viewport={{ once: true }}
               className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 gradient-text"
             >
-              نختار لكِ الأفضل، لنصل بكِ إلى القمة
               طاقم المعلمات الأكاديميات
             </motion.h2>
 

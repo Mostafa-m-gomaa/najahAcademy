@@ -14,6 +14,15 @@ const Registration = () => {
   const [searchParams] = useSearchParams();
   const preselectedCourse = searchParams.get('course') || '';
 
+  const getCourseTypeLabel = (type: string) => {
+    const normalized = type.toLowerCase();
+    if (normalized === 'solo') return 'عبرية فردية';
+    if (normalized === 'group') return 'عبرية جماعية';
+    if (normalized === 'ensolo') return 'انجليزية فردية';
+    if (normalized === 'engroup') return 'انجليزية جماعية';
+    return '';
+  };
+
   const [form, setForm] = useState({
     name: '',
     city: '',
@@ -118,7 +127,7 @@ const Registration = () => {
                   <option value="">{t('register.selectCourse')}</option>
                   {courses.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {lang === 'ar' ? c.nameAr : c.nameHe}
+                      {(lang === 'ar' ? c.nameAr : c.nameHe)} ({getCourseTypeLabel(c.type)})
                     </option>
                   ))}
                 </select>

@@ -27,6 +27,7 @@ const CourseDetail = () => {
   const level = t(`courses.${course.level}`);
   const learningPoints = lang === 'ar' ? course.learningPointsAr : course.learningPointsHe;
   const image = course.image;
+  const isEnglishCourse = course.type.includes('en');
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -96,38 +97,146 @@ const CourseDetail = () => {
               <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
                 <Clock className="w-5 h-5 text-primary-foreground" />
               </div>
-              <h2 className="text-xl font-bold gradient-text">📅 نظام تنسيق الحصص الفردية</h2>
+              <h2 className="text-xl font-bold gradient-text">
+                {course.type.includes('group') ? 'نظام المجموعات والمواعيد' : 'نظام تنسيق الحصص الفردية'}
+              </h2>
             </div>
 
-            <div className="space-y-3 text-muted-foreground text-base md:text-lg leading-8">
-              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
-                <p>
-                  <span className="font-semibold text-foreground">مرونة تامة:</span>{' '}
-                  يتم تحديد مواعيد اللقاءات مسبقاً بالتنسيق المباشر بين الطالب والمعلمة بما يناسب جدولك الشخصي.
-                </p>
-              </div>
+            {course.type.includes('group') ? (
+              <div className="space-y-3 text-muted-foreground text-base md:text-lg leading-8">
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">أيام التعليم:</span>{' '}
+                    تُحدد عند التواصل (حسب الجدول المُحدّث).
+                  </p>
+                </div>
 
-              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
-                <p>
-                  <span className="font-semibold text-foreground">قنوات التواصل:</span>{' '}
-                  يمكنك التواصل مع المعلمة المسؤولة عبر الهاتف أو الواتساب لترتيب المواعيد.
-                </p>
-              </div>
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">كثافة اللقاءات:</span>{' '}
+                    2 - 3 لقاءات أسبوعياً (حسب نوع الدورة).
+                  </p>
+                </div>
 
-              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
-                <p>
-                  <span className="font-semibold text-foreground">ساعات التنسيق:</span>{' '}
-                  خدمة التنسيق متاحة يومياً من الساعة 8:00 صباحاً حتى 8:00 مساءً.
-                </p>
-              </div>
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">أوقات الحصص:</span>{' '}
+                    حصص مسائية (ساعات بعد الظهر والمساء).
+                  </p>
+                </div>
 
-              <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
-                <p>
-                  <span className="font-semibold text-foreground">أيام العمل:</span>{' '}
-                  نتشرف بخدمتكم طوال أيام الأسبوع (ما عدا يوم السبت).
-                </p>
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">للاستفسار والحجز:</span>{' '}
+                    تواصل معنا لمعرفة الدورات والمقاعد المتاحة.
+                  </p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-3 text-muted-foreground text-base md:text-lg leading-8">
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">مرونة تامة:</span>{' '}
+                    يتم تحديد مواعيد اللقاءات مسبقاً بالتنسيق المباشر بين الطالب والمعلمة بما يناسب جدولك الشخصي.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">قنوات التواصل:</span>{' '}
+                    يمكنك التواصل مع المعلمة المسؤولة عبر الهاتف أو الواتساب لترتيب المواعيد.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">ساعات التنسيق:</span>{' '}
+                    خدمة التنسيق متاحة يومياً من الساعة 8:00 صباحاً حتى 8:00 مساءً.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">أيام العمل:</span>{' '}
+                    نتشرف بخدمتكم طوال أيام الأسبوع (ما عدا يوم السبت).
+                  </p>
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Teaching team */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.27 }}
+            className="glass-card-glow rounded-2xl p-6 md:p-8 mb-8 border border-primary/20"
+          >
+            <h2 className="text-xl font-bold gradient-text mb-5">
+              {isEnglishCourse ? 'طاقم معلماتنا: تميّز وخبرة' : 'طاقم معلمات العبرية: كفاءة وتميّز'}
+            </h2>
+
+            {isEnglishCourse ? (
+              <div className="space-y-3 text-muted-foreground text-base md:text-lg leading-8">
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">كفاءة أكاديمية:</span>{' '}
+                    معلمات متخصصات بشهادات عليا (ماجستير ودكتوراه) في أساليب التدريس.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">سهولة التواصل:</span>{' '}
+                    إتقان تام للعربية والإنجليزية لضمان فهم صعوبات الطالب ومعالجتها.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">خبرة أردنية:</span>{' '}
+                    نخبة من المعلمات الأردنيات ذوات الخبرة العالية في تدريس الطلاب العرب.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">تبسيط اللغة:</span>{' '}
+                    طاقم مؤهل لجعل التعلم سهلاً، ممتعاً، وفعالاً لكل مستويات الطلاب.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3 text-muted-foreground text-base md:text-lg leading-8">
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">تأهيل أكاديمي:</span>{' '}
+                    معلمات متخصصات بشهادات جامعية عليا (لقب أول وثانٍ) في تدريس اللغة العبرية.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">اللغة والهوية:</span>{' '}
+                    معلمات عربيات من شمال البلاد بإتقان تام للعبرية (مستوى لغة أم) لضمان تواصل سلس ودقيق.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">خبرة بالمناهج:</span>{' '}
+                    دراية شاملة بمتطلبات وزارة المعارف، امتحانات البجروت، واختبار &quot;ياعيل&quot;.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
+                  <p>
+                    <span className="font-semibold text-foreground">تبسيط وتدريب:</span>{' '}
+                    أسلوب تفاعلي ممتع يركز على اللغة المحكية وكسر حاجز الخوف لدى الطالب.
+                  </p>
+                </div>
+              </div>
+            )}
           </motion.div>
 
           {/* Payment options */}

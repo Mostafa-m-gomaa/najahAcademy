@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
-import { Phone, MessageCircle, MapPin, Send, CheckCircle } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Send, CheckCircle, Instagram, Facebook } from 'lucide-react';
 
 const ContactSection = () => {
   const { t } = useLanguage();
   const [sent, setSent] = useState(false);
   const googleMapsLocation = 'https://maps.app.goo.gl/VtdpSssb5GdkQXf39';
   const embeddedMapSrc = `https://www.google.com/maps?output=embed&q=${encodeURIComponent(googleMapsLocation)}`;
+  const instagramUrl = 'https://www.instagram.com/';
+  const facebookUrl = 'https://www.facebook.com/';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,6 +126,30 @@ const ContactSection = () => {
                 <div className="text-muted-foreground text-sm" dir="ltr">+972 54-641-0674</div>
               </div>
             </a>
+
+            <div className="glass-card rounded-2xl p-6">
+              <div className="font-semibold mb-4">Social Media</div>
+              <div className="flex items-center gap-3">
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500 via-fuchsia-500 to-purple-600 flex items-center justify-center text-primary-foreground hover:scale-105 transition-transform"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href={facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="w-11 h-11 rounded-xl bg-[#1877F2] flex items-center justify-center text-primary-foreground hover:scale-105 transition-transform"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
 
             <div className="glass-card rounded-2xl p-6 flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center">

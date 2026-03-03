@@ -3,7 +3,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Course } from '@/data/courses';
 import { motion } from 'framer-motion';
 import { Clock, BarChart3, ArrowLeft } from 'lucide-react';
-import najjahImage from '@/assets/najjah.jpeg';
 
 interface CourseCardProps {
   course: Course;
@@ -31,23 +30,21 @@ const CourseCard = ({ course, index, type }: CourseCardProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="h-full"
     >
       <Link to={`/course/${course.id}`} className="block group">
-        <div className="glass-card-glow rounded-2xl overflow-hidden transition-all duration-300 group-hover:scale-[1.02]">
+        <div className="glass-card-glow rounded-2xl overflow-hidden transition-all duration-300 group-hover:-translate-y-1 h-full flex flex-col border border-primary/10">
           {/* Image placeholder with gradient */}
-          <div className="h-44 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
-            {/* <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-4xl font-bold text-primary-foreground/30">{name.charAt(0)}</span>
-            </div> */}
-            <img src={course.image} alt={name} className="h-full w-full object-cover" />
+          <div className="h-52 md:h-56 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
+            <img src={course.image} alt={name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${levelColors[course.level]}`}>
               {levelLabel}
             </div>
           </div>
 
-          <div className="p-5">
-            <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{name}</h3>
-            <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{description}</p>
+          <div className="p-5 md:p-6 flex flex-col h-full">
+            <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem]">{name}</h3>
+            <p className="text-sm text-muted-foreground mb-4 line-clamp-3 min-h-[4.5rem]">{description}</p>
 
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -62,7 +59,7 @@ const CourseCard = ({ course, index, type }: CourseCardProps) => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-auto pt-1">
               <span className="font-bold text-lg gradient-text">
                 {course.price} {t('courses.currency')} {type === 'enSolo' && "+ 250  رسوم تسجيل لكل الدورات"}
               </span>
