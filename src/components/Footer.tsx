@@ -5,8 +5,8 @@ import { Instagram, Facebook } from 'lucide-react';
 
 const Footer = () => {
   const { t } = useLanguage();
-  const instagramUrl = 'https://www.instagram.com/';
-  const facebookUrl = 'https://www.facebook.com/';
+  const instagramUrl = 'https://www.instagram.com/najah2200/';
+  const facebookUrl = 'https://www.facebook.com/najahacademy2200';
 
   return (
     <footer className="relative z-10 border-t border-border/50 bg-card/50 backdrop-blur-sm">

@@ -199,6 +199,17 @@ const TestimonialsSection = () => {
                 />
               ))}
             </div>
+
+            <div className="mt-8 flex justify-center">
+              <a
+                href="https://www.instagram.com/stories/highlights/17949197599669882/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-all hover:scale-[1.02]"
+              >
+                للمزيد من آراء الطلاب
+              </a>
+            </div>
           </div>
         </div>
       </div>

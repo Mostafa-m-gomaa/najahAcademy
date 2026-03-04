@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import AcademicExpertsSection from '@/components/AcademicExpertsSection';
-import CoursesSection from '@/components/CoursesSection';
+import CourseCategoriesSection from '@/components/CourseCategoriesSection';
 import AboutSection from '@/components/AboutSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import ContactSection from '@/components/ContactSection';
@@ -16,10 +16,7 @@ const Index = () => {
       <Navbar />
       <Hero />
       <AcademicExpertsSection />
-      <CoursesSection type="solo" />
-      <CoursesSection type="group" />
-      <CoursesSection type="enSolo" />
-      <CoursesSection type="enGroup" />
+      <CourseCategoriesSection />
       <AboutSection />
       <TestimonialsSection />
       <ContactSection />

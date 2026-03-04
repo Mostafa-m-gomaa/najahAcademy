@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
+import CourseCategory from "./pages/CourseCategory";
 import CourseDetail from "./pages/CourseDetail";
 import Registration from "./pages/Registration";
 import Terms from "./pages/Terms";
@@ -33,6 +34,7 @@ const App = () => (
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/courses/:category" element={<CourseCategory />} />
             <Route path="/course/:id" element={<CourseDetail />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/terms" element={<Terms />} />

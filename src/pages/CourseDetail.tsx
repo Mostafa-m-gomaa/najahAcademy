@@ -65,6 +65,11 @@ const CourseDetail = () => {
                   <span className="gradient-text font-bold text-lg">{course.price} {t('courses.currency')}</span>
                 </span>
               </div>
+              {course.extraPoints && course.extraPoints.map((point, i) => (
+                <div key={i} className="glass-card rounded-xl px-5 py-3">
+                  <span className="text-sm"><strong>{point.name}:</strong> {point.value}</span>
+                </div>
+              ))}
             </div>
           </motion.div>
 

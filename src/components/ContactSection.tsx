@@ -8,8 +8,8 @@ const ContactSection = () => {
   const [sent, setSent] = useState(false);
   const googleMapsLocation = 'https://maps.app.goo.gl/VtdpSssb5GdkQXf39';
   const embeddedMapSrc = `https://www.google.com/maps?output=embed&q=${encodeURIComponent(googleMapsLocation)}`;
-  const instagramUrl = 'https://www.instagram.com/';
-  const facebookUrl = 'https://www.facebook.com/';
+  const instagramUrl = 'https://www.instagram.com/najah2200/';
+  const facebookUrl = 'https://www.facebook.com/najahacademy2200';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
