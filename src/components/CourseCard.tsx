@@ -43,8 +43,8 @@ const CourseCard = ({ course, index, type }: CourseCardProps) => {
           </div>
 
           <div className="p-5 md:p-6 flex flex-col h-full">
-            <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem]">{name}</h3>
-            <p className="text-sm text-muted-foreground mb-4 line-clamp-3 min-h-[4.5rem]">{description}</p>
+            <h3 className="font-bold text-md mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem]">{name}</h3>
+            <p className="text-sm text-muted-foreground mb-4">{description}</p>
 
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
