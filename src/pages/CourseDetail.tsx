@@ -48,13 +48,17 @@ const CourseDetail = () => {
               </div>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{name}</h1>
+            <h1 className="text-xl md:text-4xl font-bold mb-4">{name}</h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">{fullDesc}</p>
 
             <div className="flex flex-wrap gap-4 mb-8">
               <div className="glass-card rounded-xl px-5 py-3 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-primary" />
                 <span className="text-sm"><strong>{t('courses.duration')}:</strong> {duration}</span>
+              </div>
+              <div className="glass-card rounded-xl px-5 py-3 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-primary" />
+                <span className="text-sm"><strong>مواد وبرامج تعليمية</strong>  </span>
               </div>
               <div className="glass-card rounded-xl px-5 py-3 flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-primary" />
@@ -122,6 +126,7 @@ const CourseDetail = () => {
                     2 - 3 لقاءات أسبوعياً (حسب نوع الدورة).
                   </p>
                 </div>
+
 
                 <div className="rounded-xl bg-background/60 border border-border/60 px-4 py-3">
                   <p>

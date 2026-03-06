@@ -61,7 +61,7 @@ const CourseCard = ({ course, index, type }: CourseCardProps) => {
 
             <div className="flex items-center justify-between mt-auto pt-1">
               <span className="font-bold text-lg gradient-text">
-                {course.price} {t('courses.currency')} {type.toLowerCase().includes('solo') && "+ 250  رسوم تسجيل لكل الدورات"}
+                {course.price} {t('courses.currency')} {type.toLowerCase().includes('solo') && "+ 250 رسوم التسجيل للمرة الأولى فقط"}
               </span>
               <span className="flex items-center gap-1 text-sm text-primary font-medium group-hover:gap-2 transition-all">
                 {t('courses.details')}
