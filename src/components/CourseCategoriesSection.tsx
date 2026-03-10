@@ -10,6 +10,7 @@ const CourseCategoriesSection = () => {
     const { lang } = useLanguage();
 
     const categoryCards: Array<{
+        id: string;
         type: CourseType;
         titleAr: string;
         titleHe: string;
@@ -17,6 +18,7 @@ const CourseCategoriesSection = () => {
         subtitleHe: string;
     }> = [
             {
+                id: 'hebrew-solo',
                 type: 'solo',
                 titleAr: 'دورات العبرية الفردية',
                 titleHe: 'עברית פרטני',
@@ -25,6 +27,7 @@ const CourseCategoriesSection = () => {
                 subtitleHe: 'מסלולים פרטניים (1:1) עם תכנית לימוד מותאמת לרמה ולמטרות שלכם.',
             },
             {
+                id: 'hebrew-group',
                 type: 'group',
                 titleAr: `دورات العبرية الجماعية
  تفاعل وبراعة`,
@@ -33,14 +36,16 @@ const CourseCategoriesSection = () => {
                 subtitleHe: 'קורסים קבוצתיים אינטראקטיביים בדגש על דיבור ובניית ביטחון.',
             },
             {
+                id: 'english-solo',
                 type: 'enSolo',
-                titleAr: `دورات الإنجليزية الفردية: 
+                titleAr: `دورات الإنجليزية الفردية
 بوابتك نحو الطلاقة العالمية`,
                 titleHe: 'אנגלית פרטני',
                 subtitleAr: 'برامج مكثفة مخصصة لكافة الأجيال والمستويات، تركز على كسر حاجز الخوف والتحضير للامتحانات الرسمية وأهدافك المهنية، تحت إشراف نخبة من الأكاديميات.',
                 subtitleHe: 'לימודי אנגלית פרטניים מהיסודות ועד רמת פטור אקדמית.',
             },
             {
+                id: 'english-group',
                 type: 'enGroup',
                 titleAr: 'دورات اللغة الإنجليزية الجماعية',
                 titleHe: 'אנגלית קבוצתי',
@@ -74,7 +79,7 @@ const CourseCategoriesSection = () => {
 
                         return (
                             <motion.div
-                                key={category.type}
+                                key={category.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
@@ -86,7 +91,7 @@ const CourseCategoriesSection = () => {
                                         <div className="h-44 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
                                             {previewCourse?.image ? (
                                                 <img
-                                                    src={previewCourse.image}
+                                                    src="https://najah2200.com/images/669ad813acda9dbf495f2f611e97deec.jpg"
                                                     alt={lang === 'ar' ? category.titleAr : category.titleHe}
                                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                 />

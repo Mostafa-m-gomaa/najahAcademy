@@ -47,10 +47,10 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 flex flex-col items-start gap-4"
+              className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 flex flex-col items-start gap-4 "
             >
-              {t('hero.title')}{' '}
-              <span className="gradient-text mt-2">{t('hero.titleAccent')}</span>
+              <div className='leading-[45px] md:leading-[85px] '>{t('hero.title')}</div>
+              <span className="gradient-text mt-2  p-2">{t('hero.titleAccent')}</span>
             </motion.h1>
 
             <motion.p
