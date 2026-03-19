@@ -9,10 +9,15 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import { motion } from 'framer-motion';
 import { CheckCircle, Send } from 'lucide-react';
 
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnjgwzpy';
+
 const Registration = () => {
   const { t, lang } = useLanguage();
   const [searchParams] = useSearchParams();
   const preselectedCourse = searchParams.get('course') || '';
+  const courseOptions = preselectedCourse
+    ? courses.filter((c) => c.id === preselectedCourse)
+    : courses;
 
   const getCourseTypeLabel = (type: string) => {
     const normalized = type.toLowerCase();
@@ -30,6 +35,8 @@ const Registration = () => {
     course: preselectedCourse,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
@@ -41,14 +48,56 @@ const Registration = () => {
     return e;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
+
     const v = validate();
     if (Object.keys(v).length > 0) {
       setErrors(v);
       return;
     }
-    setSubmitted(true);
+
+    if (!FORMSPREE_ENDPOINT) {
+      setSubmitError('Form endpoint is missing. Please configure VITE_FORMSPREE_ENDPOINT.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const selectedCourse = courses.find((c) => c.id === form.course);
+      const courseName = selectedCourse
+        ? (lang === 'ar' ? selectedCourse.nameAr : selectedCourse.nameHe)
+        : form.course;
+
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          city: form.city,
+          phone: form.phone,
+          courseId: form.course,
+          courseName,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      setSubmitted(true);
+    } catch {
+      setSubmitError(lang === 'ar'
+        ? 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.'
+        : 'אירעה שגיאה בשליחת הטופס. נסו שוב.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -124,8 +173,8 @@ const Registration = () => {
                   onChange={(e) => { setForm({ ...form, course: e.target.value }); setErrors({ ...errors, course: '' }); }}
                   className={`w-full px-4 py-3 rounded-xl bg-secondary/50 border ${errors.course ? 'border-destructive' : 'border-border'} focus:border-primary focus:ring-1 focus:ring-primary/30 outline-none transition-all text-sm`}
                 >
-                  <option value="">{t('register.selectCourse')}</option>
-                  {courses.map((c) => (
+                  {!preselectedCourse ? <option value="">{t('register.selectCourse')}</option> : null}
+                  {courseOptions.map((c) => (
                     <option key={c.id} value={c.id}>
                       {(lang === 'ar' ? c.nameAr : c.nameHe)} ({getCourseTypeLabel(c.type)})
                     </option>
@@ -135,11 +184,17 @@ const Registration = () => {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full px-6 py-3.5 rounded-xl font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-all flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
-                {t('register.submit')}
+                {isSubmitting
+                  ? (lang === 'ar' ? 'جارٍ الإرسال...' : 'שולח...')
+                  : t('register.submit')}
               </button>
+              {submitError ? (
+                <p className="text-sm text-destructive text-center">{submitError}</p>
+              ) : null}
             </motion.form>
           )}
         </div>

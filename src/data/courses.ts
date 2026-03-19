@@ -42,7 +42,7 @@ export const courses: Course[] = [
       { name: "تقام الدورات علي", value: "Zoom Meeting" },
     ],
 
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7",
+    image: "https://najah2200.com/images/group-hebrew-beginner.jpg",
     learningPointsAr: [
       "إتقان الأبجدية قراءة وكتابة",
       "بناء جمل بسيطة وصحيحة",
@@ -81,7 +81,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "1:20 ساعة + 10 دقائق استراحة" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+    image: "https://najah2200.com/images/group-hebrew-intermediate.jpg",
     learningPointsAr: [
       "الطلاقة في إدارة الحوارات",
       "إتقان الأزمنة (ماضي – حاضر – مستقبل)",
@@ -120,7 +120,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "1:30 ساعة + 10 دقائق استراحة" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
+    image: "https://najah2200.com/images/group-hebrew-advanced.jpg",
     learningPointsAr: [
       "التدريب المكثف على امتحانات البجروت",
       "إتقان الكتابة الأكاديمية (חיבור)",
@@ -159,7 +159,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7",
+    image: "https://najah2200.com/images/top1-course.jpg",
     learningPointsAr: [
       "أكثر من 630 كلمة متقدمة ومعانيها",
       "مناقشة مواضيع فلسفية وثقافية معقدة",
@@ -199,7 +199,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1492724441997-5dc865305da7",
+    image: "https://najah2200.com/images/top2-course.jpg",
     learningPointsAr: [
       "أكثر من 1290 كلمة جديدة",
       "600+ سؤال وتمارين تطبيقية",
@@ -238,7 +238,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1588072432836-e10032774350",
+    image: "https://najah2200.com/images/top3-course.jpg",
     learningPointsAr: [
       "أكثر من 1765 كلمة أساسية",
       "بناء المحادثة من الصفر",
@@ -257,14 +257,14 @@ export const courses: Course[] = [
   {
     id: "foundation-generation-bundle",
     type: "enSolo",
-    nameAr: "رزمة جيل ا لتأسيس (35 لقاء)",
+    nameAr: "رزمة جيل التأسيس (35 لقاء)",
     nameHe: "חבילת דור היסודות",
     descriptionAr:
       "مسار تأسيسي لطلاب المرحلة الابتدائية لبناء أساس قوي في القراءة والكتابة والقواعد.",
     descriptionHe:
       "מסלול יסודי לתלמידי בית ספר יסודי לבניית בסיס חזק בקריאה, כתיבה ודקדוק.",
     fullDescriptionAr:
-      " رزمة متكاملة لطلاب الابتدائية والمبتدئين من الصفر تهدف إلى بناء البنية التحتية للغة من الصفر. نركز على القراءة الصحيحة، الكتابة السليمة، والقواعد الأساسية بأسلوب تفاعلي ممتع يساعد الطفل على حب اللغة وكسر حاجز الخوف من المحادثة منذ الصغر. مدة اللقاء 40 دقيقة او 60 دقيقة بحسب الطلب",
+      " رزمة متكاملة لطلاب الابتدائية والمبتدئين من الصفر تهدف إلى بناء البنية التحتية للغة من الصفر. نركز على القراءة الصحيحة، الكتابة السليمة، والقواعد الأساسية بأسلوب تفاعلي ممتع يساعد الطالب على حب اللغة وكسر حاجز الخوف من المحادثة منذ الصغر. مدة اللقاء 40 دقيقة او 60 دقيقة بحسب الطلب",
     fullDescriptionHe:
       "חבילה ייעודית לתלמידי יסודי לבניית תשתית שפה מלאה מהבסיס. מתמקדת בקריאה נכונה, כתיבה תקינה ודקדוק בסיסי בשיטה אינטראקטיבית ומהנה.",
     price: 3540,
@@ -278,7 +278,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7",
+    image: "https://najah2200.com/images/english35.jpg",
     learningPointsAr: [
       "بناء مهارة القراءة من الصفر",
       "تعلم الكتابة الصحيحة خطوة بخطوة",
@@ -318,7 +318,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
+    image: "https://najah2200.com/images/english25.jpg",
     learningPointsAr: [
       "سد الفجوات التعليمية",
       "تقوية مهارات الكتابة الإنشائية",
@@ -358,7 +358,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meet" },
     ],
-    image: "https://images.unsplash.com/photo-1513258496099-48168024aec0",
+    image: "https://najah2200.com/images/english15.jpg",
     learningPointsAr: [
       "تدريب مكثف على نماذج البجروت",
       "استراتيجيات الحل السريع",
@@ -397,7 +397,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meeting" },
     ],
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
+    image: "https://najah2200.com/images/english-skills-lab.jpg",
     learningPointsAr: [
       "تقوية قواعد اللغة (Grammar)",
       "توسيع القاموس اللغوي",
@@ -437,7 +437,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meeting" },
     ],
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173",
+    image: "https://najah2200.com/images/english-bagrut-masters.jpg",
     learningPointsAr: [
       "تحليل نماذج البجروت السابقة",
       "استراتيجيات الحل السريع",
@@ -477,7 +477,7 @@ export const courses: Course[] = [
       { name: "مدة اللقاء", value: "40 دقيقة او 60 دقيقة بحسب الطلب" },
       { name: "تقام الدورات علي", value: "Zoom Meeting" },
     ],
-    image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f",
+    image: "https://najah2200.com/images/english-amir-amiram.jpg",
     learningPointsAr: [
       "إتقان Restatement",
       "حل أسئلة إكمال الجمل بسرعة",

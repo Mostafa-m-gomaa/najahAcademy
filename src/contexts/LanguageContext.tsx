@@ -105,7 +105,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Footer
     'footer.rights': 'جميع الحقوق محفوظة',
-    'footer.description': 'آكاديمية متخصص في تعليم اللغات العبرية والإنجليزية بأعلى معايير الجودة',
+    'footer.description': 'آكاديمية متخصصة في تعليم اللغات العبرية والإنجليزية بأعلى معايير الجودة',
 
     // Terms
     'terms.title': 'شروط الاستخدام',

@@ -16,9 +16,11 @@ const CourseCategoriesSection = () => {
         titleHe: string;
         subtitleAr: string;
         subtitleHe: string;
+        image: string;
     }> = [
             {
                 id: 'hebrew-solo',
+                image: 'https://najah2200.com/images/hebrew-personal-caegory.jpg',
                 type: 'solo',
                 titleAr: 'دورات العبرية الفردية',
                 titleHe: 'עברית פרטני',
@@ -28,6 +30,7 @@ const CourseCategoriesSection = () => {
             },
             {
                 id: 'hebrew-group',
+                image: 'https://najah2200.com/images/hebrew-group-caegory.jpg',
                 type: 'group',
                 titleAr: `دورات العبرية الجماعية
  تفاعل وبراعة`,
@@ -37,6 +40,7 @@ const CourseCategoriesSection = () => {
             },
             {
                 id: 'english-solo',
+                image: 'https://najah2200.com/images/english-personal-caegory.jpg',
                 type: 'enSolo',
                 titleAr: `دورات الإنجليزية الفردية
 بوابتك نحو الطلاقة العالمية`,
@@ -46,6 +50,7 @@ const CourseCategoriesSection = () => {
             },
             {
                 id: 'english-group',
+                image: 'https://najah2200.com/images/english-group-caegory.jpg',
                 type: 'enGroup',
                 titleAr: 'دورات اللغة الإنجليزية الجماعية',
                 titleHe: 'אנגלית קבוצתי',
@@ -91,7 +96,7 @@ const CourseCategoriesSection = () => {
                                         <div className="h-44 relative overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
                                             {previewCourse?.image ? (
                                                 <img
-                                                    src="https://najah2200.com/images/669ad813acda9dbf495f2f611e97deec.jpg"
+                                                    src={category.image}
                                                     alt={lang === 'ar' ? category.titleAr : category.titleHe}
                                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                 />
