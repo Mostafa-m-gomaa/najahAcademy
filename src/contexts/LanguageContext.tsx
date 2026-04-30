@@ -21,6 +21,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.testimonials': 'آراء العملاء',
     'nav.contact': 'اتصل بنا',
     'nav.register': 'سجل الآن',
+    'nav.login': 'تسجيل الدخول',
+    'nav.signup': 'إنشاء حساب',
+    'nav.dashboard': 'منصة الكورسات',
+    'nav.logout': 'تسجيل الخروج',
     'nav.terms': 'شروط الاستخدام',
 
     // Hero
@@ -103,6 +107,24 @@ const translations: Record<Language, Record<string, string>> = {
     'register.success': 'تم التسجيل بنجاح! سنتواصل معك قريباً.',
     'register.selectCourse': 'اختر دورة...',
 
+    // Auth
+    'auth.loginTitle': 'تسجيل الدخول',
+    'auth.loginSubtitle': 'ادخل لحسابك للوصول لكل الكورسات',
+    'auth.signupTitle': 'إنشاء حساب جديد',
+    'auth.signupSubtitle': 'ابدأ رحلتك التعليمية معنا',
+    'auth.fullName': 'الاسم الكامل',
+    'auth.email': 'البريد الإلكتروني',
+    'auth.password': 'كلمة المرور',
+    'auth.login': 'دخول',
+    'auth.signup': 'إنشاء حساب',
+    'auth.noAccount': 'ليس لديك حساب؟',
+    'auth.haveAccount': 'لديك حساب بالفعل؟',
+
+    // App
+    'app.coursesTitle': 'كورساتك المتاحة',
+    'app.coursesSubtitle': 'اختر الكورس المناسب وابدأ من التوبيكس مباشرة',
+    'app.loading': 'جارٍ التحميل...',
+
     // Footer
     'footer.rights': 'جميع الحقوق محفوظة',
     'footer.description': 'آكاديمية متخصصة في تعليم اللغات العبرية والإنجليزية بأعلى معايير الجودة',
@@ -126,6 +148,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.testimonials': 'המלצות',
     'nav.contact': 'צור קשר',
     'nav.register': 'הרשמה',
+    'nav.login': 'התחברות',
+    'nav.signup': 'יצירת חשבון',
+    'nav.dashboard': 'מרכז הקורסים',
+    'nav.logout': 'התנתקות',
     'nav.terms': 'תנאי שימוש',
 
     'hero.title': 'שלטו בעברית ובאנגלית',
@@ -195,6 +221,24 @@ const translations: Record<Language, Record<string, string>> = {
     'register.submit': 'שלח הרשמה',
     'register.success': 'ההרשמה בוצעה בהצלחה! ניצור איתכם קשר בקרוב.',
     'register.selectCourse': 'בחרו קורס...',
+
+    // Auth
+    'auth.loginTitle': 'התחברות',
+    'auth.loginSubtitle': 'היכנסו כדי להגיע לכל הקורסים שלכם',
+    'auth.signupTitle': 'יצירת חשבון חדש',
+    'auth.signupSubtitle': 'התחילו את המסע הלימודי שלכם',
+    'auth.fullName': 'שם מלא',
+    'auth.email': 'דואר אלקטרוני',
+    'auth.password': 'סיסמה',
+    'auth.login': 'כניסה',
+    'auth.signup': 'יצירת חשבון',
+    'auth.noAccount': 'אין לכם חשבון?',
+    'auth.haveAccount': 'כבר יש לכם חשבון?',
+
+    // App
+    'app.coursesTitle': 'הקורסים הזמינים לכם',
+    'app.coursesSubtitle': 'בחרו קורס והתחילו מהנושאים',
+    'app.loading': 'טוען...',
 
     'footer.rights': 'כל הזכויות שמורות',
     'footer.description': 'מכון מתמחה בהוראת עברית ואנגלית בסטנדרטים הגבוהים ביותר',

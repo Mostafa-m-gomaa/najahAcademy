@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Menu, X, Globe } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Bell, CircleUserRound, Globe, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import najjahImage from '@/assets/najahLogo.png';
 
 const Navbar = () => {
   const { t, lang, setLang } = useLanguage();
+  const { token, user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
@@ -60,13 +62,60 @@ const Navbar = () => {
               {lang === 'ar' ? 'עב' : 'عر'}
             </button>
 
-            {/* Register CTA */}
-            <Link
-              to="/register"
-              className="hidden md:inline-flex px-5 py-2 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-opacity"
-            >
-              {t('nav.register')}
-            </Link>
+            {token ? (
+              <div className="hidden md:flex items-center gap-2">
+                {user?.role === 'admin' ? (
+                  <Link
+                    to="/app/admin/essay-dashboard"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
+                  >
+                    {lang === 'ar' ? 'إدارة الأسئلة' : 'ניהול שאלות'}
+                  </Link>
+                ) : null}
+                <Link
+                  to="/notifications"
+                  className="p-2 rounded-xl bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
+                  title={lang === 'ar' ? 'التنبيهات' : 'התראות'}
+                >
+                  <Bell className="w-5 h-5" />
+                </Link>
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
+                  title={user?.fullName || 'Profile'}
+                >
+                  <CircleUserRound className="w-5 h-5" />
+                  <span className="text-sm font-medium max-w-[140px] truncate">{user?.fullName || 'Profile'}</span>
+                </Link>
+                <Link
+                  to="/app/courses"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-opacity"
+                >
+                  {t('nav.dashboard')}
+                </Link>
+                <button
+                  onClick={logout}
+                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
+                >
+                  {t('nav.logout')}
+                </button>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
+                >
+                  {t('nav.login')}
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-5 py-2 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-opacity"
+                >
+                  {t('nav.signup')}
+                </Link>
+              </div>
+            )}
 
             {/* Mobile Menu */}
             <button
@@ -99,13 +148,65 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/register"
-                onClick={() => setMobileOpen(false)}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground text-center"
-              >
-                {t('nav.register')}
-              </Link>
+              {token ? (
+                <>
+                  {user?.role === 'admin' ? (
+                    <Link
+                      to="/app/admin/essay-dashboard"
+                      onClick={() => setMobileOpen(false)}
+                      className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center"
+                    >
+                      {lang === 'ar' ? 'إدارة الأسئلة' : 'ניהול שאלות'}
+                    </Link>
+                  ) : null}
+                  <Link
+                    to="/notifications"
+                    onClick={() => setMobileOpen(false)}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center flex items-center justify-center gap-2"
+                  >
+                    <Bell className="w-4 h-4" />
+                    <span>{lang === 'ar' ? 'التنبيهات' : 'התראות'}</span>
+                  </Link>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center flex items-center justify-center gap-2"
+                  >
+                    <CircleUserRound className="w-4 h-4" />
+                    <span>{user?.fullName || 'Profile'}</span>
+                  </Link>
+                  <Link
+                    to="/app/courses"
+                    onClick={() => setMobileOpen(false)}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground text-center"
+                  >
+                    {t('nav.dashboard')}
+                  </Link>
+                  <button
+                    onClick={() => { logout(); setMobileOpen(false); }}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center"
+                  >
+                    {t('nav.logout')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center"
+                  >
+                    {t('nav.login')}
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setMobileOpen(false)}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground text-center"
+                  >
+                    {t('nav.signup')}
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
