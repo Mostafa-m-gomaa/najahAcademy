@@ -290,7 +290,7 @@ const CourseDetail = () => {
             className="text-center"
           >
             <Link
-              to={`/register?course=${course.id}`}
+              to={`/course/${course.id}/subscribe`}
               className="inline-flex items-center gap-2 px-10 py-4 rounded-xl font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-all text-lg hover:scale-[1.02]"
             >
               {t('courses.registerCourse')}

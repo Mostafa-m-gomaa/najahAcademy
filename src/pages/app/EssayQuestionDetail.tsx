@@ -2,10 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { Send, Sparkles } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface EssayQuestion {
   id: string;
@@ -22,11 +31,39 @@ interface EssayAnswer {
   questionId: string;
   studentId: string;
   answerText: string;
-  reviews: Array<{ id: string; notes: string; createdAt: string }>;
+  reviews: Array<{ id: string; notes: string; reviewedAt?: string; createdAt?: string; reviewedBy?: string }>;
   isReviewed: boolean;
   createdAt: string;
   updatedAt: string;
 }
+
+type AiReviewResponse = {
+  success: boolean;
+  message?: string;
+  data: {
+    aiReview: {
+      accuracyPercent: number;
+      notes: string;
+    };
+    attempts: {
+      usedToday: number;
+      limitPerDay: number;
+      remainingToday: number;
+    };
+    answer: EssayAnswer;
+  };
+};
+
+const formatDateTime = (value: string | undefined, lang: "ar" | "he") => {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+
+  return new Intl.DateTimeFormat(lang === "ar" ? "ar-EG" : "he-IL", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(date);
+};
 
 const EssayQuestionDetail = () => {
   const { courseId = "", questionId = "" } = useParams();
@@ -34,6 +71,8 @@ const EssayQuestionDetail = () => {
   const { lang } = useLanguage();
   const queryClient = useQueryClient();
   const [answerText, setAnswerText] = useState("");
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiResult, setAiResult] = useState<AiReviewResponse["data"] | null>(null);
 
   const questionQuery = useQuery({
     queryKey: ["essay-question-detail", courseId],
@@ -81,6 +120,32 @@ const EssayQuestionDetail = () => {
     }
   });
 
+  const aiReviewMutation = useMutation({
+    mutationFn: async () => {
+      const text = answerText.trim();
+      if (!text) {
+        throw new Error(lang === "ar" ? "اكتب إجابتك أولًا" : "אנא כתבו תשובה תחילה");
+      }
+
+      return apiFetch<AiReviewResponse>(`/courses/${courseId}/essay-questions/${questionId}/ai-review`, {
+        method: "POST",
+        body: JSON.stringify({ answerText: text })
+      });
+    },
+    onSuccess: async (response) => {
+      setAiResult(response.data);
+      setAiDialogOpen(true);
+      await queryClient.invalidateQueries({ queryKey: ["my-essay-answer", courseId, questionId] });
+    },
+    onError: (error) => {
+      toast({
+        title: lang === "ar" ? "فشل تصحيح الذكاء الاصطناعي ✗" : "בדיקת AI נכשלה ✗",
+        description: (error as Error).message,
+        variant: "destructive"
+      });
+    }
+  });
+
   if (questionQuery.isLoading || myAnswerQuery.isLoading) {
     return <div className="text-center text-muted-foreground">{lang === "ar" ? "جارٍ التحميل..." : "טוען..."}</div>;
   }
@@ -96,7 +161,43 @@ const EssayQuestionDetail = () => {
   const answer = myAnswerQuery.data?.data.answer;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
+    <>
+      <AlertDialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {lang === "ar" ? "نتيجة التصحيح بالذكاء الاصطناعي" : "תוצאת בדיקת AI"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {aiResult
+                ? (lang === "ar"
+                  ? `المتبقي اليوم: ${aiResult.attempts.remainingToday} من ${aiResult.attempts.limitPerDay}`
+                  : `היום נשארו: ${aiResult.attempts.remainingToday} מתוך ${aiResult.attempts.limitPerDay}`)
+                : (lang === "ar" ? "جارٍ التحضير..." : "טוען...")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {aiResult ? (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border/60 bg-secondary/30 p-4">
+                <p className="text-sm text-muted-foreground mb-1">{lang === "ar" ? "نسبة الدقة" : "דיוק"}</p>
+                <p className="text-2xl font-bold gradient-text">{aiResult.aiReview.accuracyPercent}%</p>
+              </div>
+
+              <div className="rounded-xl border border-border/60 bg-secondary/30 p-4">
+                <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "الملاحظات" : "הערות"}</p>
+                <p className="text-sm leading-7 whitespace-pre-wrap">{aiResult.aiReview.notes}</p>
+              </div>
+            </div>
+          ) : null}
+
+          <AlertDialogFooter>
+            <AlertDialogAction>{lang === "ar" ? "إغلاق" : "סגירה"}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
       <section className="glass-card rounded-2xl p-6 md:p-8">
         <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "تفاصيل السؤال" : "פרטי השאלה"}</p>
         <h1 className="text-2xl font-bold mb-4">{question.title}</h1>
@@ -121,6 +222,20 @@ const EssayQuestionDetail = () => {
           <Send className="w-4 h-4" />
           {submitMutation.isPending ? (lang === "ar" ? "جارٍ الإرسال..." : "שולח...") : lang === "ar" ? "إرسال للتصحيح" : "שליחה לבדיקה"}
         </button>
+
+        <button
+          type="button"
+          disabled={aiReviewMutation.isPending}
+          onClick={() => aiReviewMutation.mutate()}
+          className="group mt-3 relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-r from-primary/90 via-violet-500/90 to-fuchsia-500/90 px-5 py-3 font-semibold text-primary-foreground shadow-[0_10px_35px_-18px_hsl(var(--primary))] transition-all hover:scale-[1.01] hover:shadow-[0_16px_40px_-18px_hsl(var(--primary))] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_45%)] opacity-70 transition-opacity group-hover:opacity-100" />
+          <Sparkles className="relative h-4 w-4" />
+          {aiReviewMutation.isPending
+            ? (lang === "ar" ? "جارٍ التصحيح بالذكاء الاصطناعي..." : "בודק עם AI..." )
+            : (lang === "ar" ? "تصحيح بالذكاء الاصطناعي" : "בדיקת AI")}
+          <span className="relative h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(110,231,183,0.9)]" />
+        </button>
       </section>
 
       <aside className="space-y-6">
@@ -140,7 +255,9 @@ const EssayQuestionDetail = () => {
               {answer.reviews.map((review) => (
                 <div key={review.id} className="rounded-xl border border-border/60 bg-secondary/30 p-4">
                   <p className="text-sm leading-7 whitespace-pre-wrap">{review.notes}</p>
-                  <p className="text-xs text-muted-foreground mt-2">{new Date(review.createdAt).toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {formatDateTime(review.reviewedAt ?? review.createdAt, lang)}
+                  </p>
                 </div>
               ))}
             </div>
@@ -149,7 +266,8 @@ const EssayQuestionDetail = () => {
           )}
         </section>
       </aside>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

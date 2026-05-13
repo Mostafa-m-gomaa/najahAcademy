@@ -22,6 +22,10 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
       label: lang === "ar" ? "التوبيكس" : "נושאים"
     },
     {
+      to: `/app/courses/${courseId}/dictionary`,
+      label: lang === "ar" ? "القاموس" : "מילון"
+    },
+    {
       to: `/app/courses/${courseId}/question-groups`,
       label: lang === "ar" ? "المجموعات" : "קבוצות"
     },
@@ -44,7 +48,7 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
           </Link>
           <h1 className="text-2xl md:text-3xl font-bold mt-3">{courseTitle}</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap justify-start md:justify-end">
           {tabs.map((tab) => (
             <RouterNavLink
               key={tab.to}

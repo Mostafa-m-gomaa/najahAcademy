@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { Bell, CircleUserRound, Globe, Menu, X } from 'lucide-react';
+import { BarChart3, Bell, CircleUserRound, Globe, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import najjahImage from '@/assets/najahLogo.png';
 
@@ -15,6 +15,7 @@ const Navbar = () => {
   const navLinks = [
     { to: '/', label: t('nav.home') },
     { to: '/#courses', label: t('nav.courses'), isHash: true },
+    { to: '/courses', label: lang === 'ar' ? 'الكورسات' : 'קורסים' },
     { to: '/#about', label: t('nav.about'), isHash: true },
     { to: '/#testimonials', label: t('nav.testimonials'), isHash: true },
     { to: '/#contact', label: t('nav.contact'), isHash: true },
@@ -93,6 +94,15 @@ const Navbar = () => {
                 >
                   {t('nav.dashboard')}
                 </Link>
+                {user?.role === 'student' ? (
+                  <Link
+                    to="/app/stats"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all inline-flex items-center gap-2"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    <span>{lang === 'ar' ? 'الإحصائيات' : 'סטטיסטיקות'}</span>
+                  </Link>
+                ) : null}
                 <button
                   onClick={logout}
                   className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
@@ -182,6 +192,16 @@ const Navbar = () => {
                   >
                     {t('nav.dashboard')}
                   </Link>
+                  {user?.role === 'student' ? (
+                    <Link
+                      to="/app/stats"
+                      onClick={() => setMobileOpen(false)}
+                      className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center flex items-center justify-center gap-2"
+                    >
+                      <BarChart3 className="w-4 h-4" />
+                      <span>{lang === 'ar' ? 'الإحصائيات' : 'סטטיסטיקות'}</span>
+                    </Link>
+                  ) : null}
                   <button
                     onClick={() => { logout(); setMobileOpen(false); }}
                     className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center"

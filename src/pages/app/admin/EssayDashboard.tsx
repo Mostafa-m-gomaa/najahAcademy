@@ -22,7 +22,7 @@ interface EssayAnswer {
   questionId: string;
   studentId: string;
   answerText: string;
-  reviews: Array<{ id: string; notes: string; createdAt: string }>;
+  reviews: Array<{ id: string; notes: string; reviewedAt?: string; createdAt?: string; reviewedBy?: string }>;
   isReviewed: boolean;
   createdAt: string;
   updatedAt: string;

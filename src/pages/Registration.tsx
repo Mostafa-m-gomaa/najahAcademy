@@ -1,32 +1,66 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { courses } from '@/data/courses';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { motion } from 'framer-motion';
 import { CheckCircle, Send } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnjgwzpy';
 
-const Registration = () => {
+interface ApiCourseLite {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  isPublished: boolean;
+}
+
+interface ApiCourse {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  isPublished: boolean;
+}
+
+type CoursesResponse = {
+  success: boolean;
+  results: number;
+  data: {
+    courses: ApiCourseLite[];
+  };
+};
+
+type CourseResponse = {
+  success: boolean;
+  data: {
+    course: ApiCourse;
+  };
+};
+
+const Registration = ({ courseId }: { courseId?: string }) => {
   const { t, lang } = useLanguage();
   const [searchParams] = useSearchParams();
-  const preselectedCourse = searchParams.get('course') || '';
-  const courseOptions = preselectedCourse
-    ? courses.filter((c) => c.id === preselectedCourse)
-    : courses;
+  const preselectedCourse = courseId || searchParams.get('course') || '';
 
-  const getCourseTypeLabel = (type: string) => {
-    const normalized = type.toLowerCase();
-    if (normalized === 'solo') return 'عبرية فردية';
-    if (normalized === 'group') return 'عبرية جماعية';
-    if (normalized === 'ensolo') return 'انجليزية فردية';
-    if (normalized === 'engroup') return 'انجليزية جماعية';
-    return '';
-  };
+  const selectedCourseQuery = useQuery({
+    queryKey: ['course-public', preselectedCourse],
+    queryFn: () => apiFetch<CourseResponse>(`/courses/${preselectedCourse}`),
+    enabled: Boolean(preselectedCourse),
+  });
+
+  const coursesQuery = useQuery({
+    queryKey: ['courses-public-lite'],
+    queryFn: () => apiFetch<CoursesResponse>(`/courses`),
+    enabled: !preselectedCourse,
+  });
+
+  const courseOptions = coursesQuery.data?.data.courses ?? [];
 
   const [form, setForm] = useState({
     name: '',
@@ -66,10 +100,9 @@ const Registration = () => {
     try {
       setIsSubmitting(true);
 
-      const selectedCourse = courses.find((c) => c.id === form.course);
-      const courseName = selectedCourse
-        ? (lang === 'ar' ? selectedCourse.nameAr : selectedCourse.nameHe)
-        : form.course;
+      const courseName = preselectedCourse
+        ? (selectedCourseQuery.data?.data.course.title || form.course)
+        : (courseOptions.find((c) => c.id === form.course)?.title || form.course);
 
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
@@ -168,18 +201,32 @@ const Registration = () => {
 
               <div>
                 <label className="block text-sm font-medium mb-2">{t('register.course')}</label>
-                <select
-                  value={form.course}
-                  onChange={(e) => { setForm({ ...form, course: e.target.value }); setErrors({ ...errors, course: '' }); }}
-                  className={`w-full px-4 py-3 rounded-xl bg-secondary/50 border ${errors.course ? 'border-destructive' : 'border-border'} focus:border-primary focus:ring-1 focus:ring-primary/30 outline-none transition-all text-sm`}
-                >
-                  {!preselectedCourse ? <option value="">{t('register.selectCourse')}</option> : null}
-                  {courseOptions.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {(lang === 'ar' ? c.nameAr : c.nameHe)} ({getCourseTypeLabel(c.type)})
-                    </option>
-                  ))}
-                </select>
+                {preselectedCourse ? (
+                  <input
+                    type="text"
+                    readOnly
+                    value={
+                      selectedCourseQuery.isLoading
+                        ? (lang === 'ar' ? 'جارٍ تحميل الكورس...' : 'טוען קורס...')
+                        : (selectedCourseQuery.data?.data.course.title || preselectedCourse)
+                    }
+                    className={`w-full px-4 py-3 rounded-xl bg-secondary/50 border ${errors.course ? 'border-destructive' : 'border-border'} outline-none transition-all text-sm`}
+                  />
+                ) : (
+                  <select
+                    value={form.course}
+                    onChange={(e) => { setForm({ ...form, course: e.target.value }); setErrors({ ...errors, course: '' }); }}
+                    className={`w-full px-4 py-3 rounded-xl bg-secondary/50 border ${errors.course ? 'border-destructive' : 'border-border'} focus:border-primary focus:ring-1 focus:ring-primary/30 outline-none transition-all text-sm`}
+                    disabled={coursesQuery.isLoading || Boolean(coursesQuery.error)}
+                  >
+                    <option value="">{t('register.selectCourse')}</option>
+                    {courseOptions.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <button

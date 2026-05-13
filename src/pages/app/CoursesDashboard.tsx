@@ -18,11 +18,19 @@ interface ApiCourse {
   topicsCount: number;
 }
 
+type MySubscribedCoursesResponse = {
+  success: boolean;
+  results: number;
+  data: {
+    courses: ApiCourse[];
+  };
+};
+
 const CoursesDashboard = () => {
   const { t, lang } = useLanguage();
   const { data, isLoading, error } = useQuery({
-    queryKey: ["courses"],
-    queryFn: () => apiFetch<{ data: { courses: ApiCourse[] } }>("/courses")
+    queryKey: ["my-subscribed-courses"],
+    queryFn: () => apiFetch<MySubscribedCoursesResponse>("/courses/my-subscribed")
   });
 
   return (
@@ -45,6 +53,10 @@ const CoursesDashboard = () => {
             <div className="text-center text-muted-foreground">{t("app.loading")}</div>
           ) : error ? (
             <div className="text-center text-destructive">{(error as Error).message}</div>
+          ) : (data?.data.courses.length ?? 0) === 0 ? (
+            <div className="text-center text-muted-foreground">
+              {lang === "ar" ? "لا توجد كورسات مشترَك فيها حاليًا." : "אין קורסים פעילים כרגע."}
+            </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {data?.data.courses.map((course, index) => (
