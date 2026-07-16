@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, FileText } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import RichHtmlContent from "@/components/RichHtmlContent";
 
 interface EssayQuestion {
   id: string;
@@ -54,8 +55,12 @@ const CourseEssayQuestions = () => {
                     <span>{lang === "ar" ? "سؤال إنشائي" : "שאלת חיבור"}</span>
                   </div>
                   <h3 className="text-xl font-bold">{question.title}</h3>
-                  <p className="text-muted-foreground leading-7 line-clamp-3">{question.question}</p>
-                  {question.description ? <p className="text-sm text-muted-foreground">{question.description}</p> : null}
+                  <div className="line-clamp-3">
+                    <RichHtmlContent html={question.question} className="text-muted-foreground leading-7" />
+                  </div>
+                  {question.description ? (
+                    <RichHtmlContent html={question.description} className="text-sm text-muted-foreground" />
+                  ) : null}
                 </div>
 
                 <Link

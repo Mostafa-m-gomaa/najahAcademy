@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import { Sparkles, Users, Star, BookOpen, Zap, Brain } from 'lucide-react';
@@ -68,22 +67,13 @@ const Hero = () => {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="flex flex-wrap gap-4 mb-10"
             >
-              <Link
-                to="/register"
-                className="group relative px-8 py-3.5 rounded-xl font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-all hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
-              >
-                <span className="relative z-10">{t('hero.cta1')}</span>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ background: 'radial-gradient(circle at center, hsl(217 91% 70% / 0.4), transparent 70%)' }}
-                />
-              </Link>
               <a
                 href="#courses"
-                className="group px-8 py-3.5 rounded-xl font-semibold border-2 border-primary/20 text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all relative overflow-hidden"
+                className="group relative px-8 py-3.5 rounded-xl font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-all hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
               >
                 <span className="relative z-10">{t('hero.cta2')}</span>
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ background: 'radial-gradient(circle at center, hsl(217 91% 60% / 0.05), transparent 70%)' }}
+                  style={{ background: 'radial-gradient(circle at center, hsl(217 91% 70% / 0.4), transparent 70%)' }}
                 />
               </a>
             </motion.div>

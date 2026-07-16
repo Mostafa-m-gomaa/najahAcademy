@@ -53,13 +53,14 @@ const App = () => (
         <AuthProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/courses/:category" element={<CourseCategory />} />
               <Route path="/course/:id" element={<CourseDetail />} />
+              <Route path="/course/:id/subscribe" element={<CourseSubscribe />} />
               <Route path="/register" element={<Registration />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/login" element={<Login />} />
@@ -67,7 +68,6 @@ const App = () => (
               <Route element={<RequireAuth />}>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/notifications" element={<Notifications />} />
-                <Route path="/course/:id/subscribe" element={<CourseSubscribe />} />
                 <Route path="/app/courses" element={<CoursesDashboard />} />
                 <Route path="/app/courses/:courseId" element={<CourseLayout />}>
                   <Route index element={<CourseOverview />} />

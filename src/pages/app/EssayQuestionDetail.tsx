@@ -6,6 +6,7 @@ import { Send, Sparkles } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
+import RichHtmlContent from "@/components/RichHtmlContent";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -186,7 +187,7 @@ const EssayQuestionDetail = () => {
 
               <div className="rounded-xl border border-border/60 bg-secondary/30 p-4">
                 <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "الملاحظات" : "הערות"}</p>
-                <p className="text-sm leading-7 whitespace-pre-wrap">{aiResult.aiReview.notes}</p>
+                <RichHtmlContent html={aiResult.aiReview.notes} className="text-sm leading-7" />
               </div>
             </div>
           ) : null}
@@ -201,8 +202,10 @@ const EssayQuestionDetail = () => {
       <section className="glass-card rounded-2xl p-6 md:p-8">
         <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "تفاصيل السؤال" : "פרטי השאלה"}</p>
         <h1 className="text-2xl font-bold mb-4">{question.title}</h1>
-        <p className="text-muted-foreground leading-8 mb-4">{question.question}</p>
-        {question.description ? <p className="text-sm text-muted-foreground mb-6">{question.description}</p> : null}
+        <RichHtmlContent html={question.question} className="text-muted-foreground leading-8 mb-4" />
+        {question.description ? (
+          <RichHtmlContent html={question.description} className="text-sm text-muted-foreground mb-6" />
+        ) : null}
 
         <label className="block text-sm font-medium mb-2">{lang === "ar" ? "إجابتك" : "התשובה שלך"}</label>
         <textarea
@@ -254,7 +257,7 @@ const EssayQuestionDetail = () => {
             <div className="space-y-3">
               {answer.reviews.map((review) => (
                 <div key={review.id} className="rounded-xl border border-border/60 bg-secondary/30 p-4">
-                  <p className="text-sm leading-7 whitespace-pre-wrap">{review.notes}</p>
+                  <RichHtmlContent html={review.notes} className="text-sm leading-7" />
                   <p className="text-xs text-muted-foreground mt-2">
                     {formatDateTime(review.reviewedAt ?? review.createdAt, lang)}
                   </p>

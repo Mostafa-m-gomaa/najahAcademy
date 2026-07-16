@@ -68,7 +68,7 @@ const Footer = () => {
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} najah2200. {t('footer.rights')}
           </p>
-          <p className="mt-2 text-xs text-muted-foreground">
+          {/* <p className="mt-2 text-xs text-muted-foreground">
             This website created with Mostafa Gomaa.{' '}
             <a
               href="https://mostafa-gomaa.me"
@@ -78,7 +78,7 @@ const Footer = () => {
             >
               mostafa-gomaa.me
             </a>
-          </p>
+          </p> */}
         </div>
       </div>
     </footer>

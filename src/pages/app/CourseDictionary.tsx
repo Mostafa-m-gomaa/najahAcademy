@@ -27,6 +27,14 @@ import {
   TableRow
 } from "@/components/ui/table";
 
+const isValidWord = (word: DictionaryWord | null | undefined): word is DictionaryWord => {
+  return Boolean(word && typeof word === "object");
+};
+
+const isValidLetter = (letter: DictionaryLetter | null | undefined): letter is DictionaryLetter => {
+  return Boolean(letter?.letter);
+};
+
 const getEntityId = (entity: { _id?: string; id?: string } | null | undefined) => {
   return entity?._id || entity?.id || "";
 };
@@ -64,7 +72,7 @@ const CourseDictionary = () => {
     enabled: Boolean(courseId)
   });
 
-  const letters: DictionaryLetter[] = lettersQuery.data?.data?.letters ?? [];
+  const letters = (lettersQuery.data?.data?.letters ?? []).filter(isValidLetter);
 
   useEffect(() => {
     if (!selectedLetter && letters.length) {
@@ -129,7 +137,7 @@ const CourseDictionary = () => {
     }
   });
 
-  const words: DictionaryWord[] = wordsQuery.data?.data?.words ?? [];
+  const words = (wordsQuery.data?.data?.words ?? []).filter(isValidWord);
 
   const toggleFavorite = (word: DictionaryWord) => {
     const wordId = getEntityId(word);
@@ -143,7 +151,9 @@ const CourseDictionary = () => {
   };
 
   const renderWordsTable = (rows: DictionaryWord[], mode: "dictionary" | "favorites") => {
-    if (!rows.length) {
+    const validRows = rows.filter(isValidWord);
+
+    if (!validRows.length) {
       return (
         <div className="text-center text-muted-foreground py-10">
           {mode === "favorites"
@@ -171,7 +181,7 @@ const CourseDictionary = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map((word, rowIndex) => {
+          {validRows.map((word, rowIndex) => {
             const wordId = getEntityId(word);
             const key = wordId || `${word.letter}-${rowIndex}`;
             const isFav = wordId ? favoriteWordIds.has(wordId) : false;
@@ -220,7 +230,7 @@ const CourseDictionary = () => {
   const favoriteWords: DictionaryWord[] = useMemo(() => {
     const list: DictionaryWord[] = [];
     for (const item of favoriteItems) {
-      if (typeof item.word !== "string") {
+      if (typeof item.word !== "string" && isValidWord(item.word)) {
         list.push(item.word);
       }
     }

@@ -50,7 +50,7 @@ const TopicDetail = () => {
   if (!topic) {
     return (
       <div className="text-center text-muted-foreground">
-        {lang === "ar" ? "التوبيك غير موجود" : "הנושא לא נמצא"}
+        {lang === "ar" ? "المحاضرة المسجلة غير موجودة" : "ההרצאה המוקלטת לא נמצאה"}
       </div>
     );
   }

@@ -9,16 +9,9 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import { motion } from 'framer-motion';
 import { CheckCircle, Send } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
+import { courses as staticCourses } from '@/data/courses';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnjgwzpy';
-
-interface ApiCourseLite {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  isPublished: boolean;
-}
 
 interface ApiCourse {
   id: string;
@@ -27,14 +20,6 @@ interface ApiCourse {
   price: number;
   isPublished: boolean;
 }
-
-type CoursesResponse = {
-  success: boolean;
-  results: number;
-  data: {
-    courses: ApiCourseLite[];
-  };
-};
 
 type CourseResponse = {
   success: boolean;
@@ -47,20 +32,21 @@ const Registration = ({ courseId }: { courseId?: string }) => {
   const { t, lang } = useLanguage();
   const [searchParams] = useSearchParams();
   const preselectedCourse = courseId || searchParams.get('course') || '';
+  const staticCourse = staticCourses.find((course) => course.id === preselectedCourse);
 
   const selectedCourseQuery = useQuery({
     queryKey: ['course-public', preselectedCourse],
     queryFn: () => apiFetch<CourseResponse>(`/courses/${preselectedCourse}`),
-    enabled: Boolean(preselectedCourse),
+    enabled: Boolean(preselectedCourse && !staticCourse),
   });
 
-  const coursesQuery = useQuery({
-    queryKey: ['courses-public-lite'],
-    queryFn: () => apiFetch<CoursesResponse>(`/courses`),
-    enabled: !preselectedCourse,
-  });
-
-  const courseOptions = coursesQuery.data?.data.courses ?? [];
+  const courseOptions = staticCourses.map((course) => ({
+    id: course.id,
+    title: lang === 'ar' ? course.nameAr : course.nameHe,
+  }));
+  const selectedCourseName = staticCourse
+    ? (lang === 'ar' ? staticCourse.nameAr : staticCourse.nameHe)
+    : selectedCourseQuery.data?.data.course.title;
 
   const [form, setForm] = useState({
     name: '',
@@ -100,9 +86,7 @@ const Registration = ({ courseId }: { courseId?: string }) => {
     try {
       setIsSubmitting(true);
 
-      const courseName = preselectedCourse
-        ? (selectedCourseQuery.data?.data.course.title || form.course)
-        : (courseOptions.find((c) => c.id === form.course)?.title || form.course);
+      const courseName = courseOptions.find((c) => c.id === form.course)?.title || selectedCourseName || form.course;
 
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
@@ -206,9 +190,9 @@ const Registration = ({ courseId }: { courseId?: string }) => {
                     type="text"
                     readOnly
                     value={
-                      selectedCourseQuery.isLoading
+                      selectedCourseQuery.isLoading && !selectedCourseName
                         ? (lang === 'ar' ? 'جارٍ تحميل الكورس...' : 'טוען קורס...')
-                        : (selectedCourseQuery.data?.data.course.title || preselectedCourse)
+                        : (selectedCourseName || preselectedCourse)
                     }
                     className={`w-full px-4 py-3 rounded-xl bg-secondary/50 border ${errors.course ? 'border-destructive' : 'border-border'} outline-none transition-all text-sm`}
                   />
@@ -217,7 +201,6 @@ const Registration = ({ courseId }: { courseId?: string }) => {
                     value={form.course}
                     onChange={(e) => { setForm({ ...form, course: e.target.value }); setErrors({ ...errors, course: '' }); }}
                     className={`w-full px-4 py-3 rounded-xl bg-secondary/50 border ${errors.course ? 'border-destructive' : 'border-border'} focus:border-primary focus:ring-1 focus:ring-primary/30 outline-none transition-all text-sm`}
-                    disabled={coursesQuery.isLoading || Boolean(coursesQuery.error)}
                   >
                     <option value="">{t('register.selectCourse')}</option>
                     {courseOptions.map((c) => (

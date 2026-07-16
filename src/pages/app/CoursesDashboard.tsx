@@ -5,8 +5,9 @@ import { BookOpenCheck } from "lucide-react";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { apiFetch, resolveMediaUrl } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import SafeMediaImage from "@/components/SafeMediaImage";
 
 interface ApiCourse {
   id: string;
@@ -68,36 +69,28 @@ const CoursesDashboard = () => {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="glass-card-glow rounded-2xl overflow-hidden border border-primary/10"
                 >
-                  <div className="h-44 bg-secondary/60 overflow-hidden">
-                    {course.imageUrl ? (
-                      <img
-                        src={resolveMediaUrl(course.imageUrl)}
-                        alt={course.title}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full flex items-center justify-center text-muted-foreground">
-                        {lang === "ar" ? "بدون صورة" : "ללא תמונה"}
-                      </div>
-                    )}
+                  <SafeMediaImage
+                    src={course.imageUrl}
+                    alt={course.title}
+                    wrapperClassName="h-44 bg-secondary/60 overflow-hidden"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="bg-slate-200/90 px-5 py-3">
+                    <h3 className="font-bold text-lg leading-snug text-slate-800 line-clamp-2">{course.title}</h3>
                   </div>
                   <div className="p-5">
-                    <h3 className="font-bold text-lg mb-2 line-clamp-2">{course.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{course.description}</p>
-                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+                    <p className="text-sm text-foreground/85 leading-6 mb-4 line-clamp-3">{course.description}</p>
+                    <div className="flex items-center text-sm font-medium text-foreground/75 mb-4">
                       <span>
-                        {lang === "ar" ? "عدد التوبيكس" : "מספר נושאים"}: {course.topicsCount}
-                      </span>
-                      <span>
-                        {lang === "ar" ? "السعر" : "מחיר"}: {course.price}₪
+                        {lang === "ar" ? "عدد المحاضرات المسجلة" : "מספר הרצאות מוקלטות"}: {course.topicsCount}
                       </span>
                     </div>
                     <Link
                       to={`/app/courses/${course.id}`}
-                      className="inline-flex items-center gap-2 text-primary font-semibold"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 hover:scale-[1.02]"
                     >
                       <BookOpenCheck className="w-4 h-4" />
-                      {lang === "ar" ? "اختيار الكورس" : "בחירת קורס"}
+                      {lang === "ar" ? "ابدأ الآن" : "התחל עכשיו"}
                     </Link>
                   </div>
                 </motion.div>

@@ -183,7 +183,7 @@ const CourseDetail = () => {
             className="glass-card-glow rounded-2xl p-6 md:p-8 mb-8 border border-primary/20"
           >
             <h2 className="text-xl font-bold gradient-text mb-5">
-              {isEnglishCourse ? 'طاقم معلماتنا: تميّز وخبرة' : 'طاقم معلمات العبرية: كفاءة وتميّز'}
+              {isEnglishCourse ? 'طاقم معلماتنا: تميّز وخبرة' : 'طاقم معلمات العبرية كفاءة وتميّز'}
             </h2>
 
             {isEnglishCourse ? (

@@ -1,4 +1,4 @@
-import { Link, NavLink as RouterNavLink } from "react-router-dom";
+import { Link, NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -11,6 +11,8 @@ interface CourseTabsHeaderProps {
 
 const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
   const { lang } = useLanguage();
+  const location = useLocation();
+  const isExamTake = /\/exams\/[^/]+\/take/.test(location.pathname);
 
   const tabs = [
     {
@@ -19,7 +21,7 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
     },
     {
       to: `/app/courses/${courseId}/topics`,
-      label: lang === "ar" ? "التوبيكس" : "נושאים"
+      label: lang === "ar" ? "المحاضرات المسجله" : "הרצאות מוקלטות"
     },
     {
       to: `/app/courses/${courseId}/dictionary`,
@@ -27,7 +29,7 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
     },
     {
       to: `/app/courses/${courseId}/question-groups`,
-      label: lang === "ar" ? "المجموعات" : "קבוצות"
+      label: lang === "ar" ? "مجموعات الأسئلة" : "קבוצות שאלות"
     },
     {
       to: `/app/courses/${courseId}/essay-questions`,
@@ -35,8 +37,12 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
     }
   ];
 
+  if (isExamTake) {
+    return null;
+  }
+
   return (
-    <div className="glass-card-glow rounded-2xl p-6 md:p-8 border border-primary/15 mb-8">
+    <div className="glass-card-glow rounded-2xl p-6 md:p-8 mb-8 border border-primary/15">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <Link
@@ -74,8 +80,8 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
         className="mt-4 text-sm text-muted-foreground"
       >
         {lang === "ar"
-          ? "كل محتوى الكورس منظم في تبويبات واضحة. ابدأ بالتوبيكس للوصول للمحاضرات والملفات."
-          : "כל תוכן הקורס מאורגן בטאבים ברורים. התחילו בנושאים כדי להגיע להרצאות ולחומרים."}
+          ? "كل محتوى الكورس منظم في تبويبات واضحة. ابدأ بالمحاضرات المسجلة للوصول للفيديوهات والملفات."
+          : "כל תוכן הקורס מאורגן בטאבים ברורים. התחילו מההרצאות המוקלטות כדי להגיע לסרטונים ולחומרים."}
       </motion.div>
     </div>
   );

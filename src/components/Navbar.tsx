@@ -15,7 +15,7 @@ const Navbar = () => {
   const navLinks = [
     { to: '/', label: t('nav.home') },
     { to: '/#courses', label: t('nav.courses'), isHash: true },
-    { to: '/courses', label: lang === 'ar' ? 'الكورسات' : 'קורסים' },
+    { to: '/courses', label: lang === 'ar' ? 'كورس ياعيل' : 'קורס יע"ל' },
     { to: '/#about', label: t('nav.about'), isHash: true },
     { to: '/#testimonials', label: t('nav.testimonials'), isHash: true },
     { to: '/#contact', label: t('nav.contact'), isHash: true },
@@ -110,22 +110,7 @@ const Navbar = () => {
                   {t('nav.logout')}
                 </button>
               </div>
-            ) : (
-              <div className="hidden md:flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
-                >
-                  {t('nav.login')}
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-5 py-2 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground hover:opacity-90 transition-opacity"
-                >
-                  {t('nav.signup')}
-                </Link>
-              </div>
-            )}
+            ) : null}
 
             {/* Mobile Menu */}
             <button
@@ -209,24 +194,7 @@ const Navbar = () => {
                     {t('nav.logout')}
                   </button>
                 </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground text-center"
-                  >
-                    {t('nav.login')}
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setMobileOpen(false)}
-                    className="px-5 py-2.5 rounded-xl text-sm font-semibold gradient-bg text-primary-foreground text-center"
-                  >
-                    {t('nav.signup')}
-                  </Link>
-                </>
-              )}
+              ) : null}
             </div>
           </motion.div>
         )}

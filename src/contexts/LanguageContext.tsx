@@ -122,7 +122,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // App
     'app.coursesTitle': 'كورساتك المتاحة',
-    'app.coursesSubtitle': 'اختر الكورس المناسب وابدأ من التوبيكس مباشرة',
+    'app.coursesSubtitle': 'اختر الكورس المناسب وابدأ من المحاضرات المسجلة مباشرة',
     'app.loading': 'جارٍ التحميل...',
 
     // Footer
@@ -237,7 +237,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // App
     'app.coursesTitle': 'הקורסים הזמינים לכם',
-    'app.coursesSubtitle': 'בחרו קורס והתחילו מהנושאים',
+    'app.coursesSubtitle': 'בחרו קורס והתחילו מההרצאות המוקלטות',
     'app.loading': 'טוען...',
 
     'footer.rights': 'כל הזכויות שמורות',
