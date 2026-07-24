@@ -284,13 +284,12 @@ const ExamTake: React.FC = () => {
                     key={questions[questionIndex].id || questionIndex}
                     type="button"
                     onClick={() => setIndex(questionIndex)}
-                    className={`relative min-w-9 h-9 px-2 rounded-lg text-sm font-bold transition-all ${
-                      isCurrent
-                        ? "bg-amber-500 text-white ring-2 ring-amber-600 ring-offset-1"
-                        : isAnswered
-                          ? "bg-emerald-500/90 text-white hover:bg-emerald-500"
-                          : "bg-white border border-amber-300 text-amber-900 hover:bg-amber-100"
-                    }`}
+                    className={`relative min-w-9 h-9 px-2 rounded-lg text-sm font-bold transition-all ${isCurrent
+                      ? "bg-amber-500 text-white ring-2 ring-amber-600 ring-offset-1"
+                      : isAnswered
+                        ? "bg-emerald-500/90 text-white hover:bg-emerald-500"
+                        : "bg-white border border-amber-300 text-amber-900 hover:bg-amber-100"
+                      }`}
                     aria-current={isCurrent ? "step" : undefined}
                     title={
                       lang === "ar"
@@ -313,11 +312,10 @@ const ExamTake: React.FC = () => {
           <div className="rounded-2xl border border-border bg-white p-5 md:p-6 shadow-sm" dir={dir}>
             {questionTimerSeconds != null && remainingSeconds != null ? (
               <div
-                className={`mb-4 rounded-xl border px-4 py-2 text-sm font-semibold text-center ${
-                  remainingSeconds <= 5
-                    ? "border-rose-500/40 bg-rose-500/10 text-rose-600"
-                    : "border-primary/30 bg-primary/10 text-primary"
-                }`}
+                className={`mb-4 rounded-xl border px-4 py-2 text-sm font-semibold text-center ${remainingSeconds <= 5
+                  ? "border-rose-500/40 bg-rose-500/10 text-rose-600"
+                  : "border-primary/30 bg-primary/10 text-primary"
+                  }`}
               >
                 {lang === "ar"
                   ? `الوقت المتبقي: ${remainingSeconds} ثانية`
@@ -325,8 +323,8 @@ const ExamTake: React.FC = () => {
               </div>
             ) : null}
 
-            <div className="w-full md:w-[60%] md:mx-auto mb-6">
-              <RichHtmlContent html={current.prompt} className="font-medium text-center text-foreground [&_p]:text-center" />
+            <div className="w-full md:w-[70%] md:me-auto mb-6  ">
+              <RichHtmlContent html={current.prompt} className="font-medium text-right text-foreground [&_p]:text-right" />
             </div>
 
             <div className="space-y-3">
@@ -382,11 +380,10 @@ const ExamTake: React.FC = () => {
         <button
           type="button"
           onClick={toggleFlag}
-          className={`inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 ${
-            flaggedQuestions.has(index)
-              ? "border-rose-400 bg-rose-500 text-white hover:bg-rose-600"
-              : "border-dashed border-amber-400/70 bg-amber-50 text-amber-700 hover:border-amber-500 hover:bg-amber-100"
-          }`}
+          className={`inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 ${flaggedQuestions.has(index)
+            ? "border-rose-400 bg-rose-500 text-white hover:bg-rose-600"
+            : "border-dashed border-amber-400/70 bg-amber-50 text-amber-700 hover:border-amber-500 hover:bg-amber-100"
+            }`}
         >
           <Bookmark className={`w-4 h-4 ${flaggedQuestions.has(index) ? "fill-current" : ""}`} />
           {lang === "ar" ? "اشارة تذكير" : "סימן תזכורת"}
