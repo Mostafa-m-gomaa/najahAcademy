@@ -6,6 +6,10 @@ interface RichHtmlContentProps {
   className?: string;
 }
 
+/**
+ * Renders rich-text HTML from the admin editor as closely as possible:
+ * paragraphs, line breaks, bold/italic/underline, lists, etc.
+ */
 const RichHtmlContent = ({ html, className }: RichHtmlContentProps) => {
   if (!html) return null;
 
@@ -31,14 +35,27 @@ const RichHtmlContent = ({ html, className }: RichHtmlContentProps) => {
       "span",
       "sub",
       "sup",
+      "div",
     ],
-    ALLOWED_ATTR: ["href", "target", "rel", "class"],
+    ALLOWED_ATTR: ["href", "target", "rel", "class", "style", "dir"],
   });
 
   return (
     <div
       className={cn(
-        "prose prose-sm max-w-none dark:prose-invert [&_p]:my-1 [&_p:first-child]:mt-0 [&_p:last-child]:mb-0",
+        "exam-editor-html max-w-none text-[15px] leading-7 text-foreground break-words",
+        // Match typical text-editor paragraph rhythm
+        "[&_p]:my-0 [&_p]:mb-3 [&_p:last-child]:mb-0",
+        // Keep empty editor lines (<p><br></p>) visible
+        "[&_p:empty]:min-h-[1.75em] [&_p:has(>br:only-child)]:min-h-[1.75em]",
+        "[&_strong]:font-bold [&_b]:font-bold [&_em]:italic [&_i]:italic [&_u]:underline",
+        "[&_ul]:my-2 [&_ul]:list-disc [&_ul]:ps-5 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:ps-5",
+        "[&_li]:my-0.5",
+        "[&_h1]:mb-2 [&_h1]:text-xl [&_h1]:font-bold",
+        "[&_h2]:mb-2 [&_h2]:text-lg [&_h2]:font-bold",
+        "[&_h3]:mb-2 [&_h3]:text-base [&_h3]:font-bold",
+        "[&_blockquote]:my-2 [&_blockquote]:border-s-2 [&_blockquote]:border-border [&_blockquote]:ps-3 [&_blockquote]:italic",
+        "[&_a]:text-primary [&_a]:underline",
         className
       )}
       dangerouslySetInnerHTML={{ __html: sanitized }}

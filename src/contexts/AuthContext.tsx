@@ -16,7 +16,7 @@ interface AuthUser {
 interface AuthContextValue {
   token: string | null;
   user: AuthUser | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ token: string; user: AuthUser }>;
   register: (fullName: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -78,6 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       body: JSON.stringify({ email, password })
     });
     persist(response.data.token, response.data.user);
+    return { token: response.data.token, user: response.data.user };
   };
 
   const register = async (fullName: string, email: string, password: string) => {

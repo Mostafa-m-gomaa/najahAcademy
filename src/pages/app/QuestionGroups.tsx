@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SafeMediaImage from "@/components/SafeMediaImage";
+import { isSpecialQuestionGroup } from "@/lib/questionGroups";
 
 const QuestionGroups = () => {
   const { courseId = "" } = useParams();
@@ -17,7 +18,7 @@ const QuestionGroups = () => {
   });
 
   const groups = useMemo(() => {
-    const list = data?.data.groups ?? [];
+    const list = (data?.data.groups ?? []).filter((group) => !isSpecialQuestionGroup(group.name));
     return [...list].reverse();
   }, [data?.data.groups]);
 
@@ -52,7 +53,7 @@ const QuestionGroups = () => {
                   to={`/app/courses/${courseId}/question-groups/${g.id}/exams`}
                   className="mt-3 inline-flex items-center justify-center rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
                 >
-                  {lang === "ar" ? "عرض الامتحانات" : "הצגת בחנים"}
+                  {lang === "ar" ? "عرض المجموعات" : "הצגת בחנים"}
                 </Link>
               </div>
             </div>

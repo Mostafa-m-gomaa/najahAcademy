@@ -39,8 +39,9 @@ const getEntityId = (entity: { _id?: string; id?: string } | null | undefined) =
   return entity?._id || entity?.id || "";
 };
 
-const getWordId = (word: DictionaryWord | string) => {
-  if (!word || typeof word === "string") return word || "";
+const getWordId = (word: DictionaryWord | string): string => {
+  if (!word) return "";
+  if (typeof word === "string") return word;
   return getEntityId(word);
 };
 
@@ -72,7 +73,7 @@ const CourseDictionary = () => {
     enabled: Boolean(courseId)
   });
 
-  const letters = (lettersQuery.data?.data?.letters ?? []).filter(isValidLetter);
+  const letters = [...(lettersQuery.data?.data?.letters ?? [])].filter(isValidLetter).reverse();
 
   useEffect(() => {
     if (!selectedLetter && letters.length) {
@@ -116,7 +117,7 @@ const CourseDictionary = () => {
         title: lang === "ar" ? "تمت الإضافة" : "נוסף",
         description: lang === "ar" ? "تمت إضافة الكلمة للمفضلة" : "המילה נוספה למועדפים"
       });
-      queryClient.invalidateQueries(["dictionary-favorites", courseId]);
+      queryClient.invalidateQueries({ queryKey: ["dictionary-favorites", courseId] });
     },
     onError: (err: any) => {
       toast({ title: "Error", description: err?.message || "Failed" });
@@ -130,7 +131,7 @@ const CourseDictionary = () => {
         title: lang === "ar" ? "تمت الإزالة" : "הוסר",
         description: lang === "ar" ? "تمت إزالة الكلمة من المفضلة" : "המילה הוסרה מהמועדפים"
       });
-      queryClient.invalidateQueries(["dictionary-favorites", courseId]);
+      queryClient.invalidateQueries({ queryKey: ["dictionary-favorites", courseId] });
     },
     onError: (err: any) => {
       toast({ title: "Error", description: err?.message || "Failed" });
@@ -274,7 +275,7 @@ const CourseDictionary = () => {
             </div>
           ) : (
             <div className="glass-card rounded-2xl p-5 md:p-6 border border-primary/10">
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 justify-start" dir="rtl">
                 {letters.map((l) => (
                   <Button
                     key={getEntityId(l) || l.letter}

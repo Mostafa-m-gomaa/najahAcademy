@@ -146,7 +146,7 @@ const Courses = () => {
             ? "سجّل دخولك أولًا ثم جرّب الاشتراك."
             : "יש להתחבר לחשבון לפני ביצוע הרשמה לקורס.",
       });
-      navigate("/login", { state: { from: `/courses` } });
+      navigate("/login");
       return;
     }
 
@@ -206,7 +206,6 @@ const Courses = () => {
                   <div className="flex items-center gap-2 shrink-0">
                     <Link
                       to="/login"
-                      state={{ from: "/courses" }}
                       className="px-4 py-2 rounded-xl text-sm font-semibold bg-secondary/70 text-muted-foreground hover:text-foreground transition-all"
                     >
                       {t("nav.login")}

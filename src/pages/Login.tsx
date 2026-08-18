@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { LogIn } from "lucide-react";
@@ -7,35 +7,116 @@ import Footer from "@/components/Footer";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { apiFetch } from "@/lib/api";
+
+type SubscribedCourse = {
+  id?: string;
+  _id?: string;
+};
+
+type MySubscribedCoursesResponse = {
+  data?: {
+    courses?: SubscribedCourse[];
+  };
+  courses?: SubscribedCourse[];
+};
+
+const getCourseId = (course: SubscribedCourse | undefined) =>
+  course?.id || course?._id || "";
+
+const isAppDeepLink = (path?: string) => {
+  if (!path) return false;
+  return (
+    path.startsWith("/app/") ||
+    path === "/app" ||
+    path === "/profile" ||
+    path === "/notifications"
+  );
+};
+
+const resolvePostLoginPath = async (options?: {
+  from?: string;
+  token?: string | null;
+  role?: string | null;
+}) => {
+  const { from, token, role } = options || {};
+  const deepLink = isAppDeepLink(from) ? from : undefined;
+
+  if (role === "admin") {
+    return deepLink || "/app/courses";
+  }
+
+  // Keep explicit in-app deep-links (e.g. return to a protected page)
+  if (deepLink && deepLink !== "/app/courses") {
+    return deepLink;
+  }
+
+  try {
+    const response = await apiFetch<MySubscribedCoursesResponse>("/courses/my-subscribed", {
+      token: token || undefined,
+    });
+    const courses = response.data?.courses ?? response.courses ?? [];
+    if (courses.length === 1) {
+      const courseId = getCourseId(courses[0]);
+      if (courseId) {
+        return `/app/courses/${courseId}`;
+      }
+    }
+  } catch {
+    // Fall back to courses dashboard
+  }
+
+  return "/app/courses";
+};
 
 const Login = () => {
   const { t, lang } = useLanguage();
-  const { login, token } = useAuth();
+  const { login, token, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const redirectTo = (location.state as { from?: string })?.from || "/app/courses";
+  const redirectFrom = (location.state as { from?: string })?.from;
+  const didRedirect = useRef(false);
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (token) {
-      navigate(redirectTo, { replace: true });
-    }
-  }, [navigate, redirectTo, token]);
+    if (!token || didRedirect.current) return;
 
-  if (token) {
-    return null;
-  }
+    let cancelled = false;
+
+    const redirect = async () => {
+      const destination = await resolvePostLoginPath({
+        from: redirectFrom,
+        token,
+        role: user?.role,
+      });
+      if (cancelled) return;
+      didRedirect.current = true;
+      navigate(destination, { replace: true });
+    };
+
+    void redirect();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate, redirectFrom, token, user?.role]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
     setLoading(true);
     try {
-      await login(form.email, form.password);
-      navigate(redirectTo, { replace: true });
+      const auth = await login(form.email, form.password);
+      const destination = await resolvePostLoginPath({
+        from: redirectFrom,
+        token: auth.token,
+        role: auth.user.role,
+      });
+      didRedirect.current = true;
+      navigate(destination, { replace: true });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Login failed";
       setError(message);
@@ -43,6 +124,16 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  if (token) {
+    return (
+      <div className="min-h-screen bg-background relative flex items-center justify-center">
+        <p className="text-muted-foreground">
+          {lang === "ar" ? "جارٍ التوجيه..." : "מפנים..."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background relative">

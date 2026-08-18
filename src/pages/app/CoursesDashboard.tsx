@@ -1,16 +1,19 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BookOpenCheck } from "lucide-react";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import SafeMediaImage from "@/components/SafeMediaImage";
 
 interface ApiCourse {
-  id: string;
+  id?: string;
+  _id?: string;
   title: string;
   description: string;
   price: number;
@@ -27,12 +30,26 @@ type MySubscribedCoursesResponse = {
   };
 };
 
+const getCourseId = (course: ApiCourse) => course.id || course._id || "";
+
 const CoursesDashboard = () => {
   const { t, lang } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({
     queryKey: ["my-subscribed-courses"],
-    queryFn: () => apiFetch<MySubscribedCoursesResponse>("/courses/my-subscribed")
+    queryFn: () => apiFetch<MySubscribedCoursesResponse>("/courses/my-subscribed"),
   });
+
+  const courses = data?.data.courses ?? [];
+
+  useEffect(() => {
+    if (user?.role === "admin" || isLoading || error) return;
+    if (courses.length === 1) {
+      const courseId = getCourseId(courses[0]);
+      if (courseId) navigate(`/app/courses/${courseId}`, { replace: true });
+    }
+  }, [courses, error, isLoading, navigate, user?.role]);
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -54,47 +71,52 @@ const CoursesDashboard = () => {
             <div className="text-center text-muted-foreground">{t("app.loading")}</div>
           ) : error ? (
             <div className="text-center text-destructive">{(error as Error).message}</div>
-          ) : (data?.data.courses.length ?? 0) === 0 ? (
+          ) : courses.length === 0 ? (
             <div className="text-center text-muted-foreground">
               {lang === "ar" ? "لا توجد كورسات مشترَك فيها حاليًا." : "אין קורסים פעילים כרגע."}
             </div>
+          ) : courses.length === 1 ? (
+            <div className="text-center text-muted-foreground">{t("app.loading")}</div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data?.data.courses.map((course, index) => (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="glass-card-glow rounded-2xl overflow-hidden border border-primary/10"
-                >
-                  <SafeMediaImage
-                    src={course.imageUrl}
-                    alt={course.title}
-                    wrapperClassName="h-44 bg-secondary/60 overflow-hidden"
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="bg-slate-200/90 px-5 py-3">
-                    <h3 className="font-bold text-lg leading-snug text-slate-800 line-clamp-2">{course.title}</h3>
-                  </div>
-                  <div className="p-5">
-                    <p className="text-sm text-foreground/85 leading-6 mb-4 line-clamp-3">{course.description}</p>
-                    <div className="flex items-center text-sm font-medium text-foreground/75 mb-4">
-                      <span>
-                        {lang === "ar" ? "عدد المحاضرات المسجلة" : "מספר הרצאות מוקלטות"}: {course.topicsCount}
-                      </span>
+              {courses.map((course, index) => {
+                const courseId = getCourseId(course);
+                return (
+                  <motion.div
+                    key={courseId || index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    className="glass-card-glow rounded-2xl overflow-hidden border border-primary/10"
+                  >
+                    <SafeMediaImage
+                      src={course.imageUrl}
+                      alt={course.title}
+                      wrapperClassName="h-44 bg-secondary/60 overflow-hidden"
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="bg-slate-200/90 px-5 py-3">
+                      <h3 className="font-bold text-lg leading-snug text-slate-800 line-clamp-2">{course.title}</h3>
                     </div>
-                    <Link
-                      to={`/app/courses/${course.id}`}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 hover:scale-[1.02]"
-                    >
-                      <BookOpenCheck className="w-4 h-4" />
-                      {lang === "ar" ? "ابدأ الآن" : "התחל עכשיו"}
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="p-5">
+                      <p className="text-sm text-foreground/85 leading-6 mb-4 line-clamp-3">{course.description}</p>
+                      <div className="flex items-center text-sm font-medium text-foreground/75 mb-4">
+                        <span>
+                          {lang === "ar" ? "عدد المحاضرات المسجلة" : "מספר הרצאות מוקלטות"}: {course.topicsCount}
+                        </span>
+                      </div>
+                      <Link
+                        to={`/app/courses/${courseId}`}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 hover:scale-[1.02]"
+                      >
+                        <BookOpenCheck className="w-4 h-4" />
+                        {lang === "ar" ? "ابدأ الآن" : "התחל עכשיו"}
+                      </Link>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
