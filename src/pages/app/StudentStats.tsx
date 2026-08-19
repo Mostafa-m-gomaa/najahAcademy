@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { BarChart3, Bell, BookCheck, BrainCircuit, PenSquare, PieChart as PieChartIcon } from "lucide-react";
@@ -22,6 +23,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
 type StudentPlatformStatsResponse = {
@@ -47,6 +49,9 @@ type StudentPlatformStatsResponse = {
         essayAnswersSubmitted: number;
         essayAnswersReviewed: number;
         aiEssayReviews: number;
+        classExamsTaken: number;
+        totalClassExamAttempts: number;
+        classExamEssayAnswersSubmitted: number;
         dictionaryFavorites: number;
         unreadNotifications: number;
       };
@@ -76,6 +81,8 @@ type StudentPlatformStatsResponse = {
         latestExamResults: Array<{
           examId: string;
           examName: string | null;
+          examType: "regular" | "classExam";
+          hasEssayAnswer?: boolean;
           courseId: string;
           courseTitle: string | null;
           score: {
@@ -104,6 +111,17 @@ const formatDate = (value: string | null | undefined, lang: "ar" | "he") => {
   return new Intl.DateTimeFormat(lang === "ar" ? "ar-EG" : "he-IL", {
     dateStyle: "medium",
   }).format(date);
+};
+
+const getExamResultPath = (item: {
+  examId: string;
+  examType: "regular" | "classExam";
+  courseId: string;
+}) => {
+  if (item.examType === "classExam") {
+    return `/app/courses/${item.courseId}/class-exams/${item.examId}/take`;
+  }
+  return `/app/courses/${item.courseId}/exams/${item.examId}/take`;
 };
 
 const StudentStats = () => {
@@ -223,16 +241,53 @@ const StudentStats = () => {
                   <p className="text-3xl font-bold">{stats.overview.activeSubscriptions}</p>
                 </div>
                 <div className="glass-card rounded-2xl p-5">
-                  <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "الامتحانات المأخوذة" : "מבחנים שנלקחו"}</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {lang === "ar" ? "الامتحانات المأخوذة (الكل)" : "מבחנים שנלקחו (הכל)"}
+                  </p>
                   <p className="text-3xl font-bold">{stats.overview.examsTaken}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {lang === "ar"
+                      ? `${stats.overview.totalExamAttempts} محاولة`
+                      : `${stats.overview.totalExamAttempts} ניסיונות`}
+                  </p>
                 </div>
                 <div className="glass-card rounded-2xl p-5">
-                  <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "إجابات صحيحة" : "תשובות נכונות"}</p>
-                  <p className="text-3xl font-bold">{stats.overview.correctAnswers}</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {lang === "ar" ? "امتحانات الفصول" : "בחינות כיתה"}
+                  </p>
+                  <p className="text-3xl font-bold">{stats.overview.classExamsTaken}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {lang === "ar"
+                      ? `${stats.overview.totalClassExamAttempts} محاولة`
+                      : `${stats.overview.totalClassExamAttempts} ניסיונות`}
+                  </p>
                 </div>
                 <div className="glass-card rounded-2xl p-5">
                   <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "الدقة العامة" : "דיוק כללי"}</p>
                   <p className="text-3xl font-bold gradient-text">{stats.overview.accuracyPercent}%</p>
+                </div>
+              </section>
+
+              <section className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div className="glass-card rounded-2xl p-5">
+                  <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "إجابات صحيحة" : "תשובות נכונות"}</p>
+                  <p className="text-3xl font-bold text-emerald-600">{stats.overview.correctAnswers}</p>
+                </div>
+                <div className="glass-card rounded-2xl p-5">
+                  <p className="text-sm text-muted-foreground mb-2">{lang === "ar" ? "إجابات خاطئة" : "תשובות שגויות"}</p>
+                  <p className="text-3xl font-bold text-rose-600">{stats.overview.wrongAnswers}</p>
+                </div>
+                <div className="glass-card rounded-2xl p-5">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {lang === "ar" ? "إجابات إنشائية (فصول)" : "חיבורים (כיתה)"}
+                  </p>
+                  <p className="text-3xl font-bold">{stats.overview.classExamEssayAnswersSubmitted}</p>
+                </div>
+                <div className="glass-card rounded-2xl p-5">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {lang === "ar" ? "بدون إجابة" : "ללא מענה"}
+                  </p>
+                  <p className="text-3xl font-bold text-muted-foreground">{stats.overview.unansweredQuestions}</p>
                 </div>
               </section>
 
@@ -326,13 +381,13 @@ const StudentStats = () => {
                   <h2 className="text-lg font-semibold">{lang === "ar" ? "الملخص النصي" : "סיכום טקסטואלי"}</h2>
                   <p className="text-muted-foreground leading-7">
                     {lang === "ar"
-                      ? `الطالب ${stats.profile.fullName} انضم في ${formatDate(stats.profile.joinedAt, lang)}. شاركت في ${stats.overview.totalExamAttempts} محاولة امتحان عبر ${stats.overview.examsTaken} امتحان مختلف.`
-                      : `${stats.profile.fullName} הצטרף בתאריך ${formatDate(stats.profile.joinedAt, lang)}. השתתפת ב-${stats.overview.totalExamAttempts} ניסיונות ב-${stats.overview.examsTaken} מבחנים שונים.`}
+                      ? `الطالب ${stats.profile.fullName} انضم في ${formatDate(stats.profile.joinedAt, lang)}. شاركت في ${stats.overview.totalExamAttempts} محاولة امتحان (عادية + فصول) عبر ${stats.overview.examsTaken} امتحان مختلف، منها ${stats.overview.classExamsTaken} امتحان فصول بـ ${stats.overview.totalClassExamAttempts} محاولة.`
+                      : `${stats.profile.fullName} הצטרף בתאריך ${formatDate(stats.profile.joinedAt, lang)}. השתתפת ב-${stats.overview.totalExamAttempts} ניסיונות (${stats.overview.examsTaken} מבחנים שונים), מתוכם ${stats.overview.classExamsTaken} בחינות כיתה ב-${stats.overview.totalClassExamAttempts} ניסיונות.`}
                   </p>
                   <p className="text-muted-foreground leading-7">
                     {lang === "ar"
-                      ? `قدمت ${stats.overview.essayAnswersSubmitted} إجابة إنشائية، وتمت مراجعة ${stats.overview.essayAnswersReviewed} منها. استخدمت مراجعة الذكاء الاصطناعي ${stats.overview.aiEssayReviews} مرة (اليوم: ${stats.activity.todaysAiEssayReviewUsage}).`
-                      : `הגשת ${stats.overview.essayAnswersSubmitted} תשובות חיבור, ומתוכן נבדקו ${stats.overview.essayAnswersReviewed}. השתמשת בבדיקת AI ${stats.overview.aiEssayReviews} פעמים (היום: ${stats.activity.todaysAiEssayReviewUsage}).`}
+                      ? `قدمت ${stats.overview.essayAnswersSubmitted} إجابة إنشائية مستقلة، و${stats.overview.classExamEssayAnswersSubmitted} إجابة إنشائية ضمن امتحانات الفصول. تمت مراجعة ${stats.overview.essayAnswersReviewed} إجابة. استخدمت مراجعة الذكاء الاصطناعي ${stats.overview.aiEssayReviews} مرة (اليوم: ${stats.activity.todaysAiEssayReviewUsage}).`
+                      : `הגשת ${stats.overview.essayAnswersSubmitted} תשובות חיבור עצמאיות ו-${stats.overview.classExamEssayAnswersSubmitted} חיבורים בבחינות כיתה. נבדקו ${stats.overview.essayAnswersReviewed}. השתמשת בבדיקת AI ${stats.overview.aiEssayReviews} פעמים (היום: ${stats.activity.todaysAiEssayReviewUsage}).`}
                   </p>
                   <p className="text-muted-foreground leading-7">
                     {lang === "ar"
@@ -369,8 +424,32 @@ const StudentStats = () => {
                   <div className="space-y-3">
                     {stats.activity.latestExamResults.length ? (
                       stats.activity.latestExamResults.map((item) => (
-                        <div key={item.examId} className="rounded-xl border border-border/60 bg-secondary/30 p-4">
-                          <p className="font-semibold">{item.examName || (lang === "ar" ? "امتحان بدون اسم" : "מבחן ללא שם")}</p>
+                        <Link
+                          key={`${item.examType}-${item.examId}-${item.submittedAt}`}
+                          to={getExamResultPath(item)}
+                          className="block rounded-xl border border-border/60 bg-secondary/30 p-4 transition-colors hover:bg-secondary/50 hover:border-primary/30"
+                        >
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <p className="font-semibold">
+                              {item.examName || (lang === "ar" ? "امتحان بدون اسم" : "מבחן ללא שם")}
+                            </p>
+                            <span
+                              className={cn(
+                                "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                                item.examType === "classExam"
+                                  ? "bg-violet-500/15 text-violet-700"
+                                  : "bg-sky-500/15 text-sky-700"
+                              )}
+                            >
+                              {item.examType === "classExam"
+                                ? lang === "ar"
+                                  ? "امتحان فصول"
+                                  : "בחינת כיתה"
+                                : lang === "ar"
+                                  ? "امتحان عادي"
+                                  : "מבחן רגיל"}
+                            </span>
+                          </div>
                           <p className="text-sm text-muted-foreground">
                             {(lang === "ar" ? "الكورس:" : "קורס:")} {item.courseTitle || (lang === "ar" ? "غير متاح" : "לא זמין")}
                           </p>
@@ -380,10 +459,22 @@ const StudentStats = () => {
                               {item.score.correctCount}/{item.score.totalQuestions} ({item.score.percentage}%)
                             </span>
                           </p>
+                          {item.examType === "classExam" ? (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {lang === "ar" ? "السؤال الإنشائي:" : "שאלת חיבור:"}{" "}
+                              {item.hasEssayAnswer
+                                ? lang === "ar"
+                                  ? "تم الإجابة"
+                                  : "נענה"
+                                : lang === "ar"
+                                  ? "لم يُجَب"
+                                  : "לא נענה"}
+                            </p>
+                          ) : null}
                           <p className="text-xs text-muted-foreground mt-1">
                             {(lang === "ar" ? "تاريخ التسليم:" : "מועד הגשה:")} {formatDate(item.submittedAt, lang)}
                           </p>
-                        </div>
+                        </Link>
                       ))
                     ) : (
                       <p className="text-muted-foreground">{lang === "ar" ? "لا توجد نتائج بعد." : "אין תוצאות עדיין."}</p>

@@ -1,11 +1,19 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueries } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { apiFetch } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SafeMediaImage from "@/components/SafeMediaImage";
 
 interface ExamItem {
+  id: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+}
+
+interface QuestionGroup {
   id: string;
   name: string;
   description?: string;
@@ -34,6 +42,17 @@ const GroupExams = () => {
     queryFn: () => apiFetch<{ data: { exams: ExamItem[] } }>(`/courses/${courseId}/question-groups/${groupId}/exams`),
     enabled: Boolean(groupId)
   });
+
+  const { data: groupsData } = useQuery({
+    queryKey: ["question-groups", courseId],
+    queryFn: () => apiFetch<{ data: { groups: QuestionGroup[] } }>(`/courses/${courseId}/question-groups`),
+    enabled: Boolean(courseId),
+  });
+
+  const group = useMemo(
+    () => groupsData?.data.groups.find((item) => item.id === groupId),
+    [groupsData?.data.groups, groupId]
+  );
 
   const exams = useMemo(() => {
     const list = data?.data.exams || [];
@@ -64,8 +83,33 @@ const GroupExams = () => {
       ) : !exams.length ? (
         <div className="glass-card rounded-2xl p-8 text-center text-muted-foreground">{lang === "ar" ? "لا توجد امتحانات" : "אין בחנים"}</div>
       ) : (
-        <div className="flex flex-wrap gap-3 items-start">
-          {exams.map((e) => (
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          {group ? (
+            <div className="glass-card rounded-2xl overflow-hidden border border-primary/15">
+              {group.imageUrl ? (
+                <SafeMediaImage
+                  src={group.imageUrl}
+                  alt={group.name}
+                  className="h-32 w-full object-cover"
+                />
+              ) : null}
+              <div className="p-6 md:p-8">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">
+                  {lang === "ar" ? "مجموعة الأسئلة" : "קבוצת שאלות"}
+                </p>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">{group.name}</h2>
+                {group.description ? (
+                  <p className="mt-3 text-muted-foreground leading-7">{group.description}</p>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="flex flex-wrap gap-3 items-start">
+          {exams.map((e, examIndex) => {
+            const showExamTitle = !group || e.name.trim() !== group.name.trim();
+
+            return (
             <div
               key={e.id}
               className="glass-card rounded-xl overflow-hidden w-full sm:w-[calc(33.333%-0.5rem)] lg:w-[calc(25%-0.5625rem)]"
@@ -77,7 +121,13 @@ const GroupExams = () => {
               />
               <div className="bg-slate-200/90 px-3 py-2">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold text-sm leading-snug text-slate-800">{e.name}</h3>
+                  {showExamTitle ? (
+                    <h3 className="font-semibold text-sm leading-snug text-slate-800">{e.name}</h3>
+                  ) : (
+                    <span className="font-semibold text-sm leading-snug text-slate-800">
+                      {lang === "ar" ? `امتحان ${examIndex + 1}` : `בחינה ${examIndex + 1}`}
+                    </span>
+                  )}
                   {latestScoreByExamId[e.id] != null ? (
                     <span className="shrink-0 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
                       {lang === "ar" ? `${latestScoreByExamId[e.id]}%` : `${latestScoreByExamId[e.id]}%`}
@@ -94,15 +144,17 @@ const GroupExams = () => {
                   <p className="text-sm text-foreground/80 leading-6">{e.description}</p>
                 ) : null}
                 <Link
-                  to={`/app/courses/${courseId}/exams/${e.id}/take`}
+                  to={`/app/courses/${courseId}/exams/${e.id}/take?groupId=${groupId}`}
                   className="mt-3 inline-flex items-center justify-center rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
                 >
                   {lang === "ar" ? "ابدأ الحل" : "בצע בחינה"}
                 </Link>
               </div>
             </div>
-          ))}
-        </div>
+            );
+          })}
+          </div>
+        </motion.div>
       )}
     </div>
   );

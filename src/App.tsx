@@ -28,6 +28,8 @@ import CourseEssayQuestions from "@/pages/app/CourseEssayQuestions";
 import EssayQuestionDetail from "@/pages/app/EssayQuestionDetail";
 import QuestionGroups from "@/pages/app/QuestionGroups";
 import GroupExams from "@/pages/app/GroupExams";
+import ClassExams from "@/pages/app/ClassExams";
+import ClassExamTake from "@/pages/app/ClassExamTake";
 import ExamTake from "@/pages/app/ExamTake";
 import CourseDictionary from "@/pages/app/CourseDictionary";
 import Notifications from "./pages/Notifications";
@@ -78,6 +80,8 @@ const App = () => (
                   <Route path="essay-questions/:questionId" element={<EssayQuestionDetail />} />
                   <Route path="question-groups" element={<QuestionGroups />} />
                   <Route path="question-groups/:groupId/exams" element={<GroupExams />} />
+                  <Route path="class-exams" element={<ClassExams />} />
+                  <Route path="class-exams/:classExamId/take" element={<ClassExamTake />} />
                   <Route path="exams/:examId/take" element={<ExamTake />} />
                 </Route>
               </Route>

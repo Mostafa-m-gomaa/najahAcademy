@@ -27,7 +27,9 @@ type TabItem = {
 const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
   const { lang } = useLanguage();
   const location = useLocation();
-  const isExamTake = /\/exams\/[^/]+\/take/.test(location.pathname);
+  const isExamTakePage =
+    /\/exams\/[^/]+\/take/.test(location.pathname) ||
+    /\/class-exams\/[^/]+\/take/.test(location.pathname);
 
   const { data: groupsData } = useQuery({
     queryKey: ["question-groups", courseId],
@@ -36,12 +38,9 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
     enabled: Boolean(courseId),
   });
 
-  const specialGroups = (groupsData?.data.groups ?? [])
-    .filter((group) => isSpecialQuestionGroup(group.name))
-    .sort((a, b) => {
-      const order = ["الفصول", "الامتحانات"];
-      return order.indexOf(a.name.trim()) - order.indexOf(b.name.trim());
-    });
+  const specialGroups = (groupsData?.data.groups ?? []).filter((group) =>
+    isSpecialQuestionGroup(group.name)
+  );
 
   const specialTabs: TabItem[] = specialGroups.map((group) => ({
     to: `/app/courses/${courseId}/question-groups/${group.id}/exams`,
@@ -74,12 +73,17 @@ const CourseTabsHeader = ({ courseTitle, courseId }: CourseTabsHeaderProps) => {
     },
     ...specialTabs,
     {
+      to: `/app/courses/${courseId}/class-exams`,
+      label: lang === "ar" ? "الامتحانات" : "בחינות",
+      end: true,
+    },
+    {
       to: `/app/courses/${courseId}/essay-questions`,
       label: lang === "ar" ? "أسئلة إنشائية" : "שאלות חיבור",
     },
   ];
 
-  if (isExamTake) {
+  if (isExamTakePage) {
     return null;
   }
 

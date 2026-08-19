@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bookmark, ChevronDown } from "lucide-react";
 import { apiFetch } from "@/lib/api";
@@ -9,6 +9,10 @@ import RichHtmlContent from "@/components/RichHtmlContent";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
+import { formatExamTimer } from "@/lib/classExams";
+import { isSpecialQuestionGroup } from "@/lib/questionGroups";
+
+const EXAM_COUNTDOWN_SECONDS = 20 * 60;
 
 /** Prompts with 140+ plain-text characters lock desktop width on mobile (horizontal scroll) */
 const LONG_QUESTION_CHAR_THRESHOLD = 140;
@@ -170,11 +174,40 @@ const optionToneClasses = [
   "bg-rose-500/8 hover:bg-rose-500/12",
 ];
 
+const formatElapsedTimer = (totalSeconds: number) => {
+  const safe = Math.max(0, Math.floor(totalSeconds));
+  const hours = Math.floor(safe / 3600);
+  const mins = Math.floor((safe % 3600) / 60);
+  const secs = safe % 60;
+  if (hours > 0) {
+    return `${hours}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
+
 const ExamTake: React.FC = () => {
   const { courseId = "", examId = "" } = useParams();
+  const [searchParams] = useSearchParams();
+  const groupId = searchParams.get("groupId") ?? "";
   const { lang, dir } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const { data: groupsData } = useQuery({
+    queryKey: ["question-groups", courseId],
+    queryFn: () =>
+      apiFetch<{ data: { groups: Array<{ id: string; name: string }> } }>(
+        `/courses/${courseId}/question-groups`
+      ),
+    enabled: Boolean(courseId && groupId),
+  });
+
+  const groupName = React.useMemo(() => {
+    if (!groupId) return null;
+    return groupsData?.data.groups.find((group) => group.id === groupId)?.name ?? null;
+  }, [groupId, groupsData?.data.groups]);
+
+  const isChaptersGroup = isSpecialQuestionGroup(groupName);
 
   const { data, isLoading } = useQuery({
     queryKey: ["exam-take", examId],
@@ -193,6 +226,9 @@ const ExamTake: React.FC = () => {
   const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<number>>(() => new Set());
   const [result, setResult] = useState<ExamSubmitResponse["data"] | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [countdownRemaining, setCountdownRemaining] = useState(EXAM_COUNTDOWN_SECONDS);
+  const [submittedElapsedSeconds, setSubmittedElapsedSeconds] = useState<number | null>(null);
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
   const [explanationOpen, setExplanationOpen] = useState(true);
   const [desktopWrapWidthPx, setDesktopWrapWidthPx] = useState(readStoredDesktopWrapWidth);
@@ -200,6 +236,8 @@ const ExamTake: React.FC = () => {
     typeof window !== "undefined" ? window.matchMedia(MD_QUERY).matches : true
   );
   const promptBoxRef = useRef<HTMLDivElement>(null);
+  const countdownRemainingRef = useRef(countdownRemaining);
+  const autoSubmitTriggeredRef = useRef(false);
 
   const isReviewMode = Boolean(result);
   const wrapWidthPx = desktopWrapWidthPx || DESKTOP_WRAP_FALLBACK_PX;
@@ -216,6 +254,27 @@ const ExamTake: React.FC = () => {
   React.useEffect(() => {
     setExplanationOpen(true);
   }, [index]);
+
+  React.useEffect(() => {
+    setElapsedSeconds(0);
+    setCountdownRemaining(EXAM_COUNTDOWN_SECONDS);
+    setSubmittedElapsedSeconds(null);
+    autoSubmitTriggeredRef.current = false;
+  }, [examId]);
+
+  React.useEffect(() => {
+    countdownRemainingRef.current = countdownRemaining;
+  }, [countdownRemaining]);
+
+  React.useEffect(() => {
+    if (isChaptersGroup || isReviewMode || !data) return;
+
+    const intervalId = window.setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isChaptersGroup, isReviewMode, data]);
 
   const toggleFlag = () => {
     setFlaggedQuestions((prev) => {
@@ -343,12 +402,40 @@ const ExamTake: React.FC = () => {
   };
 
   const submit = () => {
-    if (isReviewMode) return;
+    if (isReviewMode || mutation.isPending) return;
+    if (isChaptersGroup) {
+      setSubmittedElapsedSeconds(EXAM_COUNTDOWN_SECONDS - countdownRemainingRef.current);
+    }
     const payload = {
       answers: answers.map((s, i) => ({ questionId: questions[i].id, selectedOptionIndex: s })),
     };
     mutation.mutate(payload);
   };
+
+  React.useEffect(() => {
+    if (!isChaptersGroup || isReviewMode || !data || mutation.isPending) return;
+    if (countdownRemaining <= 0) return;
+
+    const intervalId = window.setInterval(() => {
+      setCountdownRemaining((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isChaptersGroup, isReviewMode, data, countdownRemaining, mutation.isPending]);
+
+  React.useEffect(() => {
+    if (!isChaptersGroup || isReviewMode || mutation.isPending || countdownRemaining > 0) return;
+    if (autoSubmitTriggeredRef.current) return;
+
+    autoSubmitTriggeredRef.current = true;
+    setSubmittedElapsedSeconds(EXAM_COUNTDOWN_SECONDS);
+    toast({
+      title: lang === "ar" ? "انتهى وقت الامتحان" : "זמן הבחינה נגמר",
+      description: lang === "ar" ? "تم تسليم إجاباتك تلقائياً" : "התשובות נשלחו אוטומטית",
+    });
+    submit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChaptersGroup, isReviewMode, mutation.isPending, countdownRemaining]);
 
   if (isLoading) {
     return (
@@ -366,8 +453,64 @@ const ExamTake: React.FC = () => {
     );
   }
 
+  const reviewElapsedSeconds = submittedElapsedSeconds ?? elapsedSeconds;
+  const showCountdown = isChaptersGroup && !isReviewMode;
+  const activeCountdownRemaining = countdownRemaining;
+
   return (
     <div className="space-y-5">
+      {groupName ? (
+        <div className="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-center shadow-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-primary/90">
+            {lang === "ar" ? "مجموعة الأسئلة" : "קבוצת שאלות"}
+          </p>
+          <p className="mt-1 text-base font-bold text-foreground">{groupName}</p>
+        </div>
+      ) : null}
+
+      <div
+        className={cn(
+          "sticky top-20 z-20 rounded-xl border px-4 py-3 text-center shadow-sm backdrop-blur-sm",
+          isReviewMode
+            ? "border-emerald-500/30 bg-emerald-500/10"
+            : showCountdown
+              ? activeCountdownRemaining <= 60
+                ? "border-rose-500/40 bg-rose-500/10"
+                : activeCountdownRemaining <= 300
+                  ? "border-amber-500/40 bg-amber-500/10"
+                  : "border-primary/30 bg-primary/10"
+              : "border-slate-300/70 bg-white/90"
+        )}
+      >
+        <p className="text-xs font-semibold text-muted-foreground">
+          {isReviewMode
+            ? lang === "ar"
+              ? "مدة حل الامتحان"
+              : "משך פתרון הבחינה"
+            : showCountdown
+              ? lang === "ar"
+                ? "الوقت المتبقي للامتحان"
+                : "זמן נותר לבחינה"
+              : lang === "ar"
+                ? "الوقت المنقضي"
+                : "זמן שחלף"}
+        </p>
+        <p
+          className={cn(
+            "mt-1 text-2xl font-bold tabular-nums tracking-wide",
+            isReviewMode
+              ? "text-emerald-800"
+              : showCountdown && activeCountdownRemaining <= 60
+                ? "text-rose-700"
+                : "text-foreground"
+          )}
+        >
+          {showCountdown
+            ? formatExamTimer(activeCountdownRemaining)
+            : formatElapsedTimer(isReviewMode ? reviewElapsedSeconds : elapsedSeconds)}
+        </p>
+      </div>
+
       {isReviewMode ? (
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
           <p className="text-sm font-semibold text-emerald-800">

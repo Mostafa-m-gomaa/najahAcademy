@@ -32,7 +32,9 @@ const CourseLayout = () => {
   const { courseId = "" } = useParams();
   const { t } = useLanguage();
   const location = useLocation();
-  const isExamTake = /\/exams\/[^/]+\/take/.test(location.pathname);
+  const isExamTakePage =
+    /\/exams\/[^/]+\/take/.test(location.pathname) ||
+    /\/class-exams\/[^/]+\/take/.test(location.pathname);
   const { data, isLoading, error } = useQuery({
     queryKey: ["course", courseId],
     queryFn: () => apiFetch<{ data: { course: ApiCourse } }>(`/courses/${courseId}`),
@@ -47,7 +49,7 @@ const CourseLayout = () => {
       <main
         className={cn(
           "relative z-10 pt-24 pb-16 md:px-8",
-          isExamTake ? "px-2" : "px-4"
+          isExamTakePage ? "px-2" : "px-4"
         )}
       >
         <div className="container mx-auto">
